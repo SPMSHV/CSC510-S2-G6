@@ -1,0 +1,19 @@
+# Code Owners
+
+# Global owners
+* @SPMSHV
+
+# API and core functionality
+/src/ @SPMSHV
+/tests/ @SPMSHV
+
+# Documentation
+/*.md @SPMSHV
+/docs/ @SPMSHV
+
+# Configuration files
+package.json @SPMSHV
+tsconfig.json @SPMSHV
+.eslintrc.json @SPMSHV
+Dockerfile @SPMSHV
+docker-compose.yml @SPMSHV
