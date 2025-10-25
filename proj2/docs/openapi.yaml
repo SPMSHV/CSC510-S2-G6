@@ -1,0 +1,457 @@
+openapi: 3.0.3
+info:
+  title: CampusBot API
+  version: 0.1.0
+  description: Core API scaffolding & data model (Milestone 1)
+servers:
+  - url: http://localhost:3000
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  service:
+                    type: string
+                  time:
+                    type: string
+                    format: date-time
+  /api/orders:
+    get:
+      summary: List orders
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+    post:
+      summary: Create order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+  /api/orders/{id}:
+    get:
+      summary: Get order by id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          description: Not found
+    patch:
+      summary: Update order status
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderStatusRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          description: Not found
+    delete:
+      summary: Delete order
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No content
+        '404':
+          description: Not found
+  /api/robots:
+    get:
+      summary: List robots
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Robot'
+    post:
+      summary: Create robot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRobotRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Robot'
+  /api/robots/{id}:
+    get:
+      summary: Get robot by id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Robot'
+        '404':
+          description: Not found
+    patch:
+      summary: Update robot
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRobotRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Robot'
+        '404':
+          description: Not found
+    delete:
+      summary: Delete robot
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No content
+        '404':
+          description: Not found
+  /api/robots/{id}/health:
+    get:
+      summary: Get robot health
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RobotHealthResponse'
+        '404':
+          description: Not found
+  /api/users:
+    get:
+      summary: List users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Create user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /api/users/{id}:
+    get:
+      summary: Get user by id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Not found
+    patch:
+      summary: Update user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Not found
+    delete:
+      summary: Delete user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No content
+        '404':
+          description: Not found
+components:
+  schemas:
+    OrderItem:
+      type: object
+      properties:
+        name:
+          type: string
+        quantity:
+          type: integer
+        price:
+          type: number
+      required: [name, quantity, price]
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        vendorId:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        total:
+          type: number
+        deliveryLocation:
+          type: string
+        status:
+          type: string
+          enum: [CREATED, PREPARING, READY, ASSIGNED, EN_ROUTE, DELIVERED, CANCELLED]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreateOrderRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+        vendorId:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        deliveryLocation:
+          type: string
+      required: [userId, vendorId, items, deliveryLocation]
+    UpdateOrderStatusRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [CREATED, PREPARING, READY, ASSIGNED, EN_ROUTE, DELIVERED, CANCELLED]
+      required: [status]
+    Location:
+      type: object
+      properties:
+        lat:
+          type: number
+        lng:
+          type: number
+      required: [lat, lng]
+    RobotHealthResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        battery_pct:
+          type: integer
+        localization:
+          type: string
+        motor_temp_c:
+          type: array
+          items:
+            type: number
+        comm_uptime_s:
+          type: integer
+        last_maintenance:
+          type: string
+        errors:
+          type: array
+          items:
+            type: string
+    Robot:
+      type: object
+      properties:
+        id:
+          type: string
+        robotId:
+          type: string
+        status:
+          type: string
+          enum: [IDLE, ASSIGNED, EN_ROUTE, CHARGING, MAINTENANCE, OFFLINE]
+        batteryPercent:
+          type: integer
+        location:
+          $ref: '#/components/schemas/Location'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreateRobotRequest:
+      type: object
+      properties:
+        robotId:
+          type: string
+        status:
+          type: string
+        batteryPercent:
+          type: integer
+        location:
+          $ref: '#/components/schemas/Location'
+      required: [robotId, status, batteryPercent, location]
+    UpdateRobotRequest:
+      type: object
+      properties:
+        status:
+          type: string
+        batteryPercent:
+          type: integer
+        location:
+          $ref: '#/components/schemas/Location'
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [STUDENT, VENDOR, ADMIN, ENGINEER]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        role:
+          type: string
+          enum: [STUDENT, VENDOR, ADMIN, ENGINEER]
+      required: [email, name, role]
+    UpdateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
