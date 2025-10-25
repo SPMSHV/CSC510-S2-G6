@@ -44,8 +44,8 @@ Online and on-campus food options are fragmented, slow, and costly to manage whe
 ## 🚀 Project Information
 
 - **Project Name:** CampusBot
-- **Group #:** 5
-- **Group Members:** Pranshav Gajjar (Lead), Kalyani (Robotics/QA)
+- **Group #:** 6
+- **Group Members:** 
 - **Repository:** [GitHub Link](https://github.com/your-org/campusbot)
 - **Discussion Forum:** [Discord/Forum QR Code Link]
 
@@ -189,8 +189,3 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 ## 📄 License
 
 MIT — see [LICENSE.md](LICENSE.md)
-
----
-
-**Built with ❤️ by Group 5 for CSC510 Software Engineering, Fall 2025**
-
