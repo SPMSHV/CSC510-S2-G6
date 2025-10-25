@@ -1,80 +1,14 @@
-{
-  "name": "campusbot",
-  "version": "0.1.0",
-  "private": true,
-  "description": "CampusBot — Autonomous Campus Food Delivery backend (Milestone 1)",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "start": "node dist/index.js",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "test": "jest --runInBand",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "migrate": "ts-node src/db/migrate.ts",
-    "migrate:rollback": "ts-node src/db/rollback.ts",
-    "seed": "ts-node src/db/seed.ts",
-    "db:reset": "npm run migrate:rollback || true && npm run migrate && npm run seed"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "helmet": "^7.1.0",
-    "joi": "^17.13.3",
-    "morgan": "^1.10.0",
-    "pg": "^8.13.0",
-    "swagger-ui-express": "^5.0.0",
-    "uuid": "^9.0.1",
-    "yaml": "^2.5.0"
-  },
-  "devDependencies": {
-    "@types/cors": "^2.8.19",
-    "@types/express": "^4.17.21",
-    "@types/jest": "^29.5.12",
-    "@types/morgan": "^1.9.9",
-    "@types/node": "^20.11.30",
-    "@types/pg": "^8.15.5",
-    "@types/supertest": "^2.0.12",
-    "@types/swagger-ui-express": "^4.1.8",
-    "@types/uuid": "^9.0.7",
-    "@typescript-eslint/eslint-plugin": "^8.8.1",
-    "@typescript-eslint/parser": "^8.8.1",
-    "eslint": "^9.11.1",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.29.1",
-    "jest": "^29.7.0",
-    "prettier": "^3.3.3",
-    "supertest": "^7.0.0",
-    "ts-jest": "^29.2.5",
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.3.3"
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "roots": [
-      "<rootDir>/tests"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.ts",
-      "!src/**/index.ts",
-      "!src/**/types.ts"
-    ],
-    "coverageDirectory": "coverage",
-    "coverageReporters": [
-      "text",
-      "lcov",
-      "clover"
-    ]
-  }
-}
+{\n  \
+name\: \campusbot-api\,\n  \version\: \0.1.0\,\n  \description\: \CampusBot
+API
+-
+Milestone
+1\,\n  \main\: \dist/index.js\,\n  \scripts\: {\n    \build\: \tsc\,\n    \start\: \node
+dist/index.js\,\n    \dev\: \ts-node
+src/index.ts\,\n    \test\: \jest\,\n    \lint\: \eslint
+src/**/*.ts\,\n    \lint:fix\: \eslint
+src/**/*.ts
+--fix\,\n    \migrate\: \ts-node
+src/db/migrate.ts\,\n    \rollback\: \ts-node
+src/db/rollback.ts\,\n    \seed\: \ts-node
+src/db/seed.ts\\n  },\n  \dependencies\: {\n    \express\: \^4.18.2\,\n    \cors\: \^2.8.5\,\n    \helmet\: \^7.1.0\,\n    \morgan\: \^1.10.0\,\n    \joi\: \^17.11.0\,\n    \uuid\: \^9.0.1\,\n    \pg\: \^8.11.3\,\n    \swagger-ui-express\: \^5.0.0\,\n    \yaml\: \^2.3.4\\n  },\n  \devDependencies\: {\n    \@types/cors\: \^2.8.19\,\n    \@types/express\: \^4.17.21\,\n    \@types/jest\: \^29.5.12\,\n    \@types/morgan\: \^1.9.9\,\n    \@types/node\: \^20.11.30\,\n    \@types/pg\: \^8.15.5\,\n    \@types/supertest\: \^2.0.12\,\n    \@types/swagger-ui-express\: \^4.1.8\,\n    \@types/uuid\: \^9.0.7\,\n    \@typescript-eslint/eslint-plugin\: \^8.8.1\,\n    \@typescript-eslint/parser\: \^8.8.1\,\n    \eslint\: \^9.0.0\,\n    \jest\: \^29.7.0\,\n    \prettier\: \^3.2.5\,\n    \supertest\: \^6.3.3\,\n    \ts-jest\: \^29.1.1\,\n    \ts-node\: \^10.9.2\,\n    \typescript\: \^5.3.3\\n  },\n  \jest\: {\n    \preset\: \ts-jest\,\n    \testEnvironment\: \node\,\n    \roots\: [\n      \<rootDir>/tests\\n    ],\n    \collectCoverageFrom\: [\n      \src/**/*.ts\,\n      \!src/**/*.d.ts\\n    ],\n    \coverageDirectory\: \coverage\,\n    \coverageReporters\: [\n      \text\,\n      \lcov\,\n      \clover\\n    ]\n  }\n}
