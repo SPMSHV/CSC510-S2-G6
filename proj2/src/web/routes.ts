@@ -1,0 +1,1 @@
+import { Router, Request, Response } from 'express';\n\nexport const router = Router();\n\nrouter.get('/', (_req: Request, res: Response) => {\n  res.json({ status: 'ok', message: 'API ready' });\n});\n
