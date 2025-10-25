@@ -1,0 +1,1 @@
+import request from 'supertest';\nimport { createApp } from './helpers/request';\n\nconst app = createApp();\n\ndescribe('Health', () => {\n  it('returns ok', async () => {\n    const res = await request(app).get('/health');\n    expect(res.status).toBe(200);\n    expect(res.body.status).toBe('ok');\n  });\n});\n
