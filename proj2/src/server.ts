@@ -1,1 +1,43 @@
-import express, { Request, Response } from 'express';\nimport cors from 'cors';\nimport helmet from 'helmet';\nimport morgan from 'morgan';\nimport path from 'path';\nimport fs from 'fs';\nimport swaggerUi from 'swagger-ui-express';\nimport { router as apiRouter } from './web/routes';\n\nexport function createServer() {\n  const app = express();\n\n  app.use(helmet());\n  app.use(cors());\n  app.use(express.json());\n  app.use(morgan('dev'));\n\n  app.get('/health', (_req: Request, res: Response) => {\n    res.json({ status: 'ok', service: 'campusbot', time: new Date().toISOString() });\n  });\n\n  const apiPrefix = process.env.API_PREFIX || '/api';\n  app.use(apiPrefix, apiRouter);\n\n  const docsPath = path.join(process.cwd(), 'docs', 'openapi.yaml');\n  if (fs.existsSync(docsPath)) {\n    const yaml = require('yaml');\n    const file = fs.readFileSync(docsPath, 'utf8');\n    const openapiDoc = yaml.parse(file);\n    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiDoc));\n    app.get('/api-docs.json', (_req: Request, res: Response) => res.json(openapiDoc));\n  }\n\n  app.get('/', (_req: Request, res: Response) => {\n    res.redirect(302, '/api-docs');\n  });\n\n  app.use((req: Request, res: Response) => {\n    res.status(404).json({ error: 'Not Found', path: req.path });\n  });\n\n  return app;\n}\n
+import express, { Request, Response } from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import path from 'path';
+import fs from 'fs';
+import swaggerUi from 'swagger-ui-express';
+import { router as apiRouter } from './web/routes';
+
+export function createServer() {
+  const app = express();
+
+  app.use(helmet());
+  app.use(cors());
+  app.use(express.json());
+  app.use(morgan('dev'));
+
+  app.get('/health', (_req: Request, res: Response) => {
+    res.json({ status: 'ok', service: 'campusbot', time: new Date().toISOString() });
+  });
+
+  const apiPrefix = process.env.API_PREFIX || '/api';
+  app.use(apiPrefix, apiRouter);
+
+  const docsPath = path.join(process.cwd(), 'docs', 'openapi.yaml');
+  if (fs.existsSync(docsPath)) {
+    const yaml = require('yaml');
+    const file = fs.readFileSync(docsPath, 'utf8');
+    const openapiDoc = yaml.parse(file);
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiDoc));
+    app.get('/api-docs.json', (_req: Request, res: Response) => res.json(openapiDoc));
+  }
+
+  app.get('/', (_req: Request, res: Response) => {
+    res.redirect(302, '/api-docs');
+  });
+
+  app.use((req: Request, res: Response) => {
+    res.status(404).json({ error: 'Not Found', path: req.path });
+  });
+
+  return app;
+}

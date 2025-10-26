@@ -1,1 +1,5 @@
-import { createServer } from '../../src/server';\n\nexport function createApp() {\n  return createServer();\n}\n
+import { createServer } from '../../src/server';
+
+export function createApp() {
+  return createServer();
+}

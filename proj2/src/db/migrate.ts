@@ -1,13 +1,24 @@
-import { pool } from './client';
-import fs from 'fs';
-import path from 'path';
+import dotenv from 'dotenv';
+import { runSqlFile } from './client';
 
-async function migrate() {
-  const schemaPath = path.join(process.cwd(), 'db', 'schema.sql');
-  const schema = fs.readFileSync(schemaPath, 'utf8');
-  await pool.query(schema);
-  console.log('Migration completed');
-  process.exit(0);
+dotenv.config();
+
+async function main() {
+  const backend = process.env.DATA_BACKEND || 'memory';
+  if (backend === 'postgres') {
+    // eslint-disable-next-line no-console
+    console.log('Applying PostgreSQL schema...');
+    await runSqlFile('db/schema.sql');
+    // eslint-disable-next-line no-console
+    console.log('Schema applied.');
+  } else {
+    // eslint-disable-next-line no-console
+    console.log('Migrations complete (no-op for in-memory backend).');
+  }
 }
 
-migrate().catch(console.error);
+main().catch((e) => {
+  // eslint-disable-next-line no-console
+  console.error(e);
+  process.exit(1);
+});

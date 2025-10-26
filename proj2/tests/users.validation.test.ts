@@ -1,1 +1,38 @@
-import request from 'supertest';\nimport { createApp } from './helpers/request';\n\nconst app = createApp();\n\ndescribe('Users API - validation', () => {\n  const invalidCreate = [\n    {},\n    { email: 'user@example.com' },\n    { name: 'User' },\n    { role: 'STUDENT' },\n    { email: 'user@example.com', name: 'User' },\n    { email: 'user@example.com', role: 'STUDENT' },\n    { name: 'User', role: 'STUDENT' },\n    { email: 'invalid-email', name: 'User', role: 'STUDENT' },\n    { email: 'user@example.com', name: '', role: 'STUDENT' },\n    { email: 'user@example.com', name: 'User', role: 'INVALID' },\n  ];\n\n  test.each(invalidCreate.map((p, i) => [i, p]))('rejects invalid user create %p', async (_i, payload) => {\n    const res = await request(app).post('/api/users').send(payload as any);\n    expect(res.status).toBe(400);\n  });\n\n  const roles = ['STUDENT', 'VENDOR', 'ADMIN', 'ENGINEER'] as const;\n  test.each(roles.map((r) => [r]))('creates user with role %p', async (role) => {\n    const res = await request(app)\n      .post('/api/users')\n      .send({ email: 'test@example.com', name: 'Test User', role });\n    expect(res.status).toBe(201);\n    expect(res.body.role).toBe(role);\n  });\n\n  test('updates user with partial data', async () => {\n    const create = await request(app)\n      .post('/api/users')\n      .send({ email: 'update@example.com', name: 'Original', role: 'STUDENT' });\n    const id = create.body.id;\n    \n    const patch = await request(app).patch(/api/users/).send({ name: 'Updated' });\n    expect(patch.status).toBe(200);\n    expect(patch.body.name).toBe('Updated');\n    expect(patch.body.email).toBe('update@example.com');\n  });\n\n  test('rejects invalid email format in update', async () => {\n    const create = await request(app)\n      .post('/api/users')\n      .send({ email: 'valid@example.com', name: 'User', role: 'STUDENT' });\n    const id = create.body.id;\n    \n    const patch = await request(app).patch(/api/users/).send({ email: 'invalid-email' });\n    expect(patch.status).toBe(400);\n  });\n\n  test('rejects invalid role in update', async () => {\n    const create = await request(app)\n      .post('/api/users')\n      .send({ email: 'valid@example.com', name: 'User', role: 'STUDENT' });\n    const id = create.body.id;\n    \n    const patch = await request(app).patch(/api/users/).send({ role: 'INVALID' });\n    expect(patch.status).toBe(400);\n  });\n});\n
+import request from 'supertest';
+import { createApp } from './helpers/request';
+
+const app = createApp();
+
+describe('Users API - validation', () => {
+  const invalidUsers = [
+    {},
+    { email: 'not-an-email', name: 'x', role: 'STUDENT' },
+    { email: 'a@b.com', role: 'STUDENT' },
+    { email: 'a@b.com', name: 'x' },
+    { email: 'a@b.com', name: 'x', role: 'UNKNOWN' },
+  ];
+
+  test.each(invalidUsers.map((p, i) => [i, p]))('rejects invalid user create %p', async (_i, payload) => {
+    const res = await request(app).post('/api/users').send(payload as any);
+    expect(res.status).toBe(400);
+  });
+
+  const roles = ['STUDENT', 'VENDOR', 'ADMIN', 'ENGINEER'] as const;
+  test.each(roles.map((r) => [r]))('creates user with role %p', async (role) => {
+    const res = await request(app)
+      .post('/api/users')
+      .send({ email: `${role.toLowerCase()}@u.edu`, name: `${role}-User`, role });
+    expect(res.status).toBe(201);
+  });
+
+  const n = Array.from({ length: 25 }).map((_, i) => i + 1);
+  test.each(n.map((i) => [i]))('updates user variant #%p', async (i) => {
+    const create = await request(app)
+      .post('/api/users')
+      .send({ email: `u${i}@u.edu`, name: `User ${i}`, role: 'STUDENT' });
+    const id = create.body.id;
+    const patch = await request(app).patch(`/api/users/${id}`).send({ name: `User ${i}X` });
+    expect(patch.status).toBe(200);
+    expect(patch.body.name).toBe(`User ${i}X`);
+  });
+});

@@ -1,25 +1,42 @@
-import { pool } from './client';
+import dotenv from 'dotenv';
+import http from 'http';
 
-async function seed() {
-  // Seed users
-  await pool.query(
-    'INSERT INTO users (email, name, role) VALUES (, , ) ON CONFLICT (email) DO NOTHING',
-    ['student@university.edu', 'Student User', 'STUDENT']
+dotenv.config();
+
+function post(path: string, body: unknown): Promise<void> {
+  const data = JSON.stringify(body);
+  const req = http.request(
+    { hostname: 'localhost', port: process.env.PORT || 3000, path, method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } },
+    (res) => {
+      res.resume();
+    },
   );
-
-  await pool.query(
-    'INSERT INTO users (email, name, role) VALUES (, , ) ON CONFLICT (email) DO NOTHING',
-    ['vendor@university.edu', 'Vendor User', 'VENDOR']
-  );
-
-  // Seed robots
-  await pool.query(
-    'INSERT INTO robots (robot_id, status, battery_percent, location_lat, location_lng) VALUES (, , , , ) ON CONFLICT (robot_id) DO NOTHING',
-    ['RB-001', 'IDLE', 85, 35.0, -78.0]
-  );
-
-  console.log('Seed completed');
-  process.exit(0);
+  return new Promise((resolve, reject) => {
+    req.on('error', reject);
+    req.on('close', () => resolve());
+    req.write(data);
+    req.end();
+  });
 }
 
-seed().catch(console.error);
+async function main() {
+  await post('/api/users', { email: 'student@university.edu', name: 'Student One', role: 'STUDENT' });
+  await post('/api/robots', { robotId: 'RB-07', status: 'IDLE', batteryPercent: 90, location: { lat: 35.77, lng: -78.64 } });
+  await post('/api/orders', {
+    userId: 'student-1',
+    vendorId: 'vendor-1',
+    items: [
+      { name: 'Maple Bacon Burger', quantity: 1, price: 12.5 },
+      { name: 'Iced Tea', quantity: 1, price: 2.5 },
+    ],
+    deliveryLocation: 'Engineering Building, Room 201',
+  });
+  // eslint-disable-next-line no-console
+  console.log('Seed complete');
+}
+
+main().catch((e) => {
+  // eslint-disable-next-line no-console
+  console.error(e);
+  process.exit(1);
+});

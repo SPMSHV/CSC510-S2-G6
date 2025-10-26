@@ -1,1 +1,44 @@
-import request from 'supertest';\nimport { createApp } from './helpers/request';\n\nconst app = createApp();\n\ndescribe('Robots API - validation', () => {\n  const invalidCreate = [\n    {},\n    { robotId: 'RB-1' },\n    { status: 'IDLE' },\n    { batteryPercent: 10 },\n    { location: { lat: 0, lng: 0 } },\n    { robotId: 'RB-1', status: 'IDLE', batteryPercent: -1, location: { lat: 0, lng: 0 } },\n    { robotId: 'RB-1', status: 'X', batteryPercent: 10, location: { lat: 0, lng: 0 } },\n    { robotId: 'RB-1', status: 'IDLE', batteryPercent: 200, location: { lat: 0, lng: 0 } },\n    { robotId: 'RB-1', status: 'IDLE', batteryPercent: 10, location: { lat: 'x', lng: 0 } },\n    { robotId: 'RB-1', status: 'IDLE', batteryPercent: 10, location: { lat: 0, lng: 'y' } },\n  ];\n\n  test.each(invalidCreate.map((p, i) => [i, p]))('rejects invalid robot create %p', async (_i, payload) => {\n    const res = await request(app).post('/api/robots').send(payload as any);\n    expect(res.status).toBe(400);\n  });\n\n  const statuses = ['IDLE', 'ASSIGNED', 'EN_ROUTE', 'CHARGING', 'MAINTENANCE', 'OFFLINE'] as const;\n  test.each(statuses.map((s) => [s]))('creates robot with status %p and updates battery', async (s) => {\n    const create = await request(app)\n      .post('/api/robots')\n      .send({ robotId: 'RB-' + s, status: s, batteryPercent: 50, location: { lat: 1, lng: 2 } });\n    const id = create.body.id;\n    const patch = await request(app).patch(/api/robots/).send({ batteryPercent: 75 });\n    expect(patch.status).toBe(200);\n    expect(patch.body.batteryPercent).toBe(75);\n  });\n\n  test('rejects invalid battery percentage in update', async () => {\n    const create = await request(app)\n      .post('/api/robots')\n      .send({ robotId: 'RB-TEST', status: 'IDLE', batteryPercent: 50, location: { lat: 0, lng: 0 } });\n    const id = create.body.id;\n    \n    const patch = await request(app).patch(/api/robots/).send({ batteryPercent: 150 });\n    expect(patch.status).toBe(400);\n  });\n\n  test('rejects invalid status in update', async () => {\n    const create = await request(app)\n      .post('/api/robots')\n      .send({ robotId: 'RB-TEST', status: 'IDLE', batteryPercent: 50, location: { lat: 0, lng: 0 } });\n    const id = create.body.id;\n    \n    const patch = await request(app).patch(/api/robots/).send({ status: 'INVALID' });\n    expect(patch.status).toBe(400);\n  });\n\n  test('rejects invalid location in update', async () => {\n    const create = await request(app)\n      .post('/api/robots')\n      .send({ robotId: 'RB-TEST', status: 'IDLE', batteryPercent: 50, location: { lat: 0, lng: 0 } });\n    const id = create.body.id;\n    \n    const patch = await request(app).patch(/api/robots/).send({ location: { lat: 'invalid', lng: 0 } });\n    expect(patch.status).toBe(400);\n  });\n});\n
+import request from 'supertest';
+import { createApp } from './helpers/request';
+
+const app = createApp();
+
+describe('Robots API - validation', () => {
+  const invalidCreate = [
+    {},
+    { robotId: 'RB-1' },
+    { status: 'IDLE' },
+    { batteryPercent: 10 },
+    { location: { lat: 0, lng: 0 } },
+    { robotId: 'RB-1', status: 'IDLE', batteryPercent: -1, location: { lat: 0, lng: 0 } },
+    { robotId: 'RB-1', status: 'X', batteryPercent: 10, location: { lat: 0, lng: 0 } },
+    { robotId: 'RB-1', status: 'IDLE', batteryPercent: 200, location: { lat: 0, lng: 0 } },
+    { robotId: 'RB-1', status: 'IDLE', batteryPercent: 10, location: { lat: 'x', lng: 0 } },
+    { robotId: 'RB-1', status: 'IDLE', batteryPercent: 10, location: { lat: 0, lng: 'y' } },
+  ];
+
+  test.each(invalidCreate.map((p, i) => [i, p]))('rejects invalid robot create %p', async (_i, payload) => {
+    const res = await request(app).post('/api/robots').send(payload as any);
+    expect(res.status).toBe(400);
+  });
+
+  const statuses = ['IDLE', 'ASSIGNED', 'EN_ROUTE', 'CHARGING', 'MAINTENANCE', 'OFFLINE'] as const;
+
+  test.each(statuses.map((s) => [s]))('creates robot with status %p and updates battery', async (s) => {
+    const create = await request(app)
+      .post('/api/robots')
+      .send({ robotId: `RB-${s}`, status: s, batteryPercent: 50, location: { lat: 1, lng: 2 } });
+    const id = create.body.id;
+    const patch = await request(app).patch(`/api/robots/${id}`).send({ batteryPercent: 75 });
+    expect(patch.status).toBe(200);
+    expect(patch.body.batteryPercent).toBe(75);
+  });
+
+  const n = Array.from({ length: 20 }).map((_, i) => i + 1);
+  test.each(n.map((i) => [i]))('creates robot variant #%p', async (i) => {
+    const res = await request(app)
+      .post('/api/robots')
+      .send({ robotId: `RB-${i}`, status: 'IDLE', batteryPercent: (i * 7) % 100, location: { lat: i, lng: -i } });
+    expect(res.status).toBe(201);
+  });
+});

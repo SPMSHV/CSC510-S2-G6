@@ -1,1 +1,44 @@
-import request from 'supertest';\nimport { createApp } from './helpers/request';\n\nconst app = createApp();\n\ndescribe('Robots API', () => {\n  it('lists empty robots initially', async () => {\n    const res = await request(app).get('/api/robots');\n    expect(res.status).toBe(200);\n    expect(Array.isArray(res.body)).toBe(true);\n    expect(res.body.length).toBe(0);\n  });\n\n  it('creates a robot and fetches health', async () => {\n    const payload = {\n      robotId: 'RB-07',\n      status: 'IDLE',\n      batteryPercent: 95,\n      location: { lat: 35.0, lng: -78.0 },\n    };\n    const res = await request(app).post('/api/robots').send(payload);\n    expect(res.status).toBe(201);\n\n    const health = await request(app).get(/api/robots//health);\n    expect(health.status).toBe(200);\n    expect(health.body.id).toBe('RB-07');\n    expect(typeof health.body.battery_pct).toBe('number');\n  });\n\n  it('updates robot status', async () => {\n    const create = await request(app)\n      .post('/api/robots')\n      .send({ robotId: 'RB-08', status: 'IDLE', batteryPercent: 50, location: { lat: 0, lng: 0 } });\n    const id = create.body.id;\n    const patch = await request(app).patch(/api/robots/).send({ status: 'EN_ROUTE' });\n    expect(patch.status).toBe(200);\n    expect(patch.body.status).toBe('EN_ROUTE');\n  });\n\n  it('returns 404 for non-existing robot', async () => {\n    const res = await request(app).get('/api/robots/nonexistent');\n    expect(res.status).toBe(404);\n  });\n});\n
+import request from 'supertest';
+import { createApp } from './helpers/request';
+
+const app = createApp();
+
+describe('Robots API', () => {
+  it('lists empty robots initially', async () => {
+    const res = await request(app).get('/api/robots');
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body.length).toBe(0);
+  });
+
+  it('creates a robot and fetches health', async () => {
+    const payload = {
+      robotId: 'RB-07',
+      status: 'IDLE',
+      batteryPercent: 95,
+      location: { lat: 35.0, lng: -78.0 },
+    };
+    const res = await request(app).post('/api/robots').send(payload);
+    expect(res.status).toBe(201);
+
+    const health = await request(app).get(`/api/robots/${res.body.id}/health`);
+    expect(health.status).toBe(200);
+    expect(health.body.id).toBe('RB-07');
+    expect(typeof health.body.battery_pct).toBe('number');
+  });
+
+  it('updates robot status', async () => {
+    const create = await request(app)
+      .post('/api/robots')
+      .send({ robotId: 'RB-08', status: 'IDLE', batteryPercent: 50, location: { lat: 0, lng: 0 } });
+    const id = create.body.id;
+    const patch = await request(app).patch(`/api/robots/${id}`).send({ status: 'EN_ROUTE' });
+    expect(patch.status).toBe(200);
+    expect(patch.body.status).toBe('EN_ROUTE');
+  });
+
+  it('returns 404 for non-existing robot', async () => {
+    const res = await request(app).get('/api/robots/nonexistent');
+    expect(res.status).toBe(404);
+  });
+});

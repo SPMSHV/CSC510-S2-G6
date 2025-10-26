@@ -1,1 +1,10 @@
-import { Router, Request, Response } from 'express';\nimport { router as usersRouter } from './routes/users';\nimport { router as robotsRouter } from './routes/robots';\n\nexport const router = Router();\n\nrouter.get('/', (_req: Request, res: Response) => {\n  res.json({ status: 'ok', message: 'API ready' });\n});\n\nrouter.use('/users', usersRouter);\nrouter.use('/robots', robotsRouter);\n
+import { Router } from 'express';
+import { router as ordersRouter } from './routes/orders';
+import { router as robotsRouter } from './routes/robots';
+import { router as usersRouter } from './routes/users';
+
+export const router = Router();
+
+router.use('/orders', ordersRouter);
+router.use('/robots', robotsRouter);
+router.use('/users', usersRouter);

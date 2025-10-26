@@ -1,1 +1,106 @@
-import { Router, Request, Response } from 'express';\nimport Joi from 'joi';\nimport { v4 as uuidv4 } from 'uuid';\n\nexport const router = Router();\n\ntype RobotStatus = 'IDLE' | 'ASSIGNED' | 'EN_ROUTE' | 'CHARGING' | 'MAINTENANCE' | 'OFFLINE';\n\ninterface Location { lat: number; lng: number }\n\ninterface RobotHealth {\n  battery_pct: number;\n  localization: string;\n  motor_temp_c: number[];\n  comm_uptime_s: number;\n  last_maintenance: string;\n  errors: string[];\n}\n\ninterface Robot {\n  id: string;\n  robotId: string;\n  status: RobotStatus;\n  batteryPercent: number;\n  location: Location;\n  health: RobotHealth;\n  createdAt: string;\n  updatedAt: string;\n}\n\nconst createSchema = Joi.object({\n  robotId: Joi.string().required(),\n  status: Joi.string().valid('IDLE', 'ASSIGNED', 'EN_ROUTE', 'CHARGING', 'MAINTENANCE', 'OFFLINE').required(),\n  batteryPercent: Joi.number().min(0).max(100).required(),\n  location: Joi.object({ lat: Joi.number().required(), lng: Joi.number().required() }).required(),\n});\n\nconst robots: Record<string, Robot> = {};\n\nfunction defaultHealth(): RobotHealth {\n  return {\n    battery_pct: 90,\n    localization: 'LIDAR_OK+GPS_OK',\n    motor_temp_c: [40, 39, 41, 38],\n    comm_uptime_s: 3600,\n    last_maintenance: new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10),\n    errors: [],\n  };\n}\n\nrouter.get('/', (_req: Request, res: Response) => {\n  res.json(Object.values(robots));\n});\n\nrouter.get('/:id', (req: Request, res: Response) => {\n  const robot = robots[req.params.id];\n  if (!robot) return res.status(404).json({ error: 'Robot not found' });\n  res.json(robot);\n});\n\nrouter.get('/:id/health', (req: Request, res: Response) => {\n  const robot = robots[req.params.id];\n  if (!robot) return res.status(404).json({ error: 'Robot not found' });\n  res.json({ id: robot.robotId, status: robot.status, ...robot.health });\n});\n\nrouter.post('/', (req: Request, res: Response) => {\n  const { error, value } = createSchema.validate(req.body);\n  if (error) return res.status(400).json({ error: error.message });\n  const now = new Date().toISOString();\n  const id = uuidv4();\n  const robot: Robot = {\n    id,\n    robotId: value.robotId,\n    status: value.status,\n    batteryPercent: value.batteryPercent,\n    location: value.location,\n    health: defaultHealth(),\n    createdAt: now,\n    updatedAt: now,\n  };\n  robots[id] = robot;\n  res.status(201).json(robot);\n});\n\nrouter.patch('/:id', (req: Request, res: Response) => {\n  const robot = robots[req.params.id];\n  if (!robot) return res.status(404).json({ error: 'Robot not found' });\n  const allowed = ['status', 'batteryPercent', 'location'] as const;\n  const body = req.body as Partial<Robot>;\n  for (const key of allowed) {\n    if (key in body && body[key] !== undefined) {\n      // @ts-expect-error index\n      robot[key] = body[key] as any;\n    }\n  }\n  robot.updatedAt = new Date().toISOString();\n  res.json(robot);\n});\n\nrouter.delete('/:id', (req: Request, res: Response) => {\n  const robot = robots[req.params.id];\n  if (!robot) return res.status(404).json({ error: 'Robot not found' });\n  delete robots[req.params.id];\n  res.status(204).send();\n});\n
+import { Router, Request, Response } from 'express';
+import Joi from 'joi';
+import { v4 as uuidv4 } from 'uuid';
+
+export const router = Router();
+
+type RobotStatus = 'IDLE' | 'ASSIGNED' | 'EN_ROUTE' | 'CHARGING' | 'MAINTENANCE' | 'OFFLINE';
+
+interface Location { lat: number; lng: number }
+
+interface RobotHealth {
+  battery_pct: number;
+  localization: string;
+  motor_temp_c: number[];
+  comm_uptime_s: number;
+  last_maintenance: string;
+  errors: string[];
+}
+
+interface Robot {
+  id: string; // UUID
+  robotId: string; // human-readable (e.g., RB-07)
+  status: RobotStatus;
+  batteryPercent: number;
+  location: Location;
+  health: RobotHealth;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const createSchema = Joi.object({
+  robotId: Joi.string().required(),
+  status: Joi.string().valid('IDLE', 'ASSIGNED', 'EN_ROUTE', 'CHARGING', 'MAINTENANCE', 'OFFLINE').required(),
+  batteryPercent: Joi.number().min(0).max(100).required(),
+  location: Joi.object({ lat: Joi.number().required(), lng: Joi.number().required() }).required(),
+});
+
+const robots: Record<string, Robot> = {};
+
+function defaultHealth(): RobotHealth {
+  return {
+    battery_pct: 90,
+    localization: 'LIDAR_OK+GPS_OK',
+    motor_temp_c: [40, 39, 41, 38],
+    comm_uptime_s: 3600,
+    last_maintenance: new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10),
+    errors: [],
+  };
+}
+
+router.get('/', (_req: Request, res: Response) => {
+  res.json(Object.values(robots));
+});
+
+router.get('/:id', (req: Request, res: Response) => {
+  const robot = robots[req.params.id];
+  if (!robot) return res.status(404).json({ error: 'Robot not found' });
+  res.json(robot);
+});
+
+router.get('/:id/health', (req: Request, res: Response) => {
+  const robot = robots[req.params.id];
+  if (!robot) return res.status(404).json({ error: 'Robot not found' });
+  res.json({ id: robot.robotId, status: robot.status, ...robot.health });
+});
+
+router.post('/', (req: Request, res: Response) => {
+  const { error, value } = createSchema.validate(req.body);
+  if (error) return res.status(400).json({ error: error.message });
+  const now = new Date().toISOString();
+  const id = uuidv4();
+  const robot: Robot = {
+    id,
+    robotId: value.robotId,
+    status: value.status,
+    batteryPercent: value.batteryPercent,
+    location: value.location,
+    health: defaultHealth(),
+    createdAt: now,
+    updatedAt: now,
+  };
+  robots[id] = robot;
+  res.status(201).json(robot);
+});
+
+router.patch('/:id', (req: Request, res: Response) => {
+  const robot = robots[req.params.id];
+  if (!robot) return res.status(404).json({ error: 'Robot not found' });
+  const allowed = ['status', 'batteryPercent', 'location'] as const;
+  const body = req.body as Partial<Robot>;
+  for (const key of allowed) {
+    if (key in body && body[key] !== undefined) {
+      // @ts-expect-error index
+      robot[key] = body[key] as any;
+    }
+  }
+  robot.updatedAt = new Date().toISOString();
+  res.json(robot);
+});
+
+router.delete('/:id', (req: Request, res: Response) => {
+  const robot = robots[req.params.id];
+  if (!robot) return res.status(404).json({ error: 'Robot not found' });
+  delete robots[req.params.id];
+  res.status(204).send();
+});

@@ -1,1 +1,67 @@
-import { Router, Request, Response } from 'express';\nimport Joi from 'joi';\nimport { v4 as uuidv4 } from 'uuid';\n\nexport const router = Router();\n\ntype UserRole = 'STUDENT' | 'VENDOR' | 'ADMIN' | 'ENGINEER';\n\ninterface User {\n  id: string;\n  email: string;\n  name: string;\n  role: UserRole;\n  createdAt: string;\n  updatedAt: string;\n}\n\nconst createSchema = Joi.object({\n  email: Joi.string().email().required(),\n  name: Joi.string().min(2).required(),\n  role: Joi.string().valid('STUDENT', 'VENDOR', 'ADMIN', 'ENGINEER').required(),\n});\n\nconst updateSchema = Joi.object({\n  email: Joi.string().email(),\n  name: Joi.string().min(2),\n  role: Joi.string().valid('STUDENT', 'VENDOR', 'ADMIN', 'ENGINEER'),\n}).min(1);\n\nconst users: Record<string, User> = {};\n\nrouter.get('/', (_req: Request, res: Response) => {\n  res.json(Object.values(users));\n});\n\nrouter.get('/:id', (req: Request, res: Response) => {\n  const user = users[req.params.id];\n  if (!user) return res.status(404).json({ error: 'User not found' });\n  res.json(user);\n});\n\nrouter.post('/', (req: Request, res: Response) => {\n  const { error, value } = createSchema.validate(req.body);\n  if (error) return res.status(400).json({ error: error.message });\n  const now = new Date().toISOString();\n  const id = uuidv4();\n  const user: User = { id, email: value.email, name: value.name, role: value.role, createdAt: now, updatedAt: now };\n  users[id] = user;\n  res.status(201).json(user);\n});\n\nrouter.patch('/:id', (req: Request, res: Response) => {\n  const user = users[req.params.id];\n  if (!user) return res.status(404).json({ error: 'User not found' });\n  const { error, value } = updateSchema.validate(req.body, { allowUnknown: false });\n  if (error) return res.status(400).json({ error: error.message });\n  Object.assign(user, value);\n  user.updatedAt = new Date().toISOString();\n  res.json(user);\n});\n\nrouter.delete('/:id', (req: Request, res: Response) => {\n  const user = users[req.params.id];\n  if (!user) return res.status(404).json({ error: 'User not found' });\n  delete users[req.params.id];\n  res.status(204).send();\n});\n
+import { Router, Request, Response } from 'express';
+import Joi from 'joi';
+import { v4 as uuidv4 } from 'uuid';
+
+export const router = Router();
+
+type UserRole = 'STUDENT' | 'VENDOR' | 'ADMIN' | 'ENGINEER';
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const createSchema = Joi.object({
+  email: Joi.string().email().required(),
+  name: Joi.string().min(2).required(),
+  role: Joi.string().valid('STUDENT', 'VENDOR', 'ADMIN', 'ENGINEER').required(),
+});
+
+const updateSchema = Joi.object({
+  email: Joi.string().email(),
+  name: Joi.string().min(2),
+  role: Joi.string().valid('STUDENT', 'VENDOR', 'ADMIN', 'ENGINEER'),
+}).min(1);
+
+const users: Record<string, User> = {};
+
+router.get('/', (_req: Request, res: Response) => {
+  res.json(Object.values(users));
+});
+
+router.get('/:id', (req: Request, res: Response) => {
+  const user = users[req.params.id];
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  res.json(user);
+});
+
+router.post('/', (req: Request, res: Response) => {
+  const { error, value } = createSchema.validate(req.body);
+  if (error) return res.status(400).json({ error: error.message });
+  const now = new Date().toISOString();
+  const id = uuidv4();
+  const user: User = { id, email: value.email, name: value.name, role: value.role, createdAt: now, updatedAt: now };
+  users[id] = user;
+  res.status(201).json(user);
+});
+
+router.patch('/:id', (req: Request, res: Response) => {
+  const user = users[req.params.id];
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  const { error, value } = updateSchema.validate(req.body, { allowUnknown: false });
+  if (error) return res.status(400).json({ error: error.message });
+  Object.assign(user, value);
+  user.updatedAt = new Date().toISOString();
+  res.json(user);
+});
+
+router.delete('/:id', (req: Request, res: Response) => {
+  const user = users[req.params.id];
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  delete users[req.params.id];
+  res.status(204).send();
+});

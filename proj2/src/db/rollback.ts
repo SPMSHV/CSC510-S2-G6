@@ -1,11 +1,6 @@
-import { pool } from './client';
+import dotenv from 'dotenv';
 
-async function rollback() {
-  await pool.query('DROP TABLE IF EXISTS orders CASCADE');');
-  await pool.query('DROP TABLE IF EXISTS robots CASCADE');');
-  await pool.query('DROP TABLE IF EXISTS users CASCADE');');
-  console.log('Rollback completed');
-  process.exit(0);
-}
+dotenv.config();
 
-rollback().catch(console.error);
+// eslint-disable-next-line no-console
+console.log('Rollback complete (no-op for in-memory backend).');
