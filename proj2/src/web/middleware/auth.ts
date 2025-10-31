@@ -53,7 +53,9 @@ export async function authenticate(req: AuthRequest, res: Response, next: NextFu
     req.userId = decoded.userId;
     next();
   } catch (error) {
-    res.status(401).json({ error: 'Authentication failed' });
+    if (!res.headersSent) {
+      res.status(401).json({ error: 'Authentication failed' });
+    }
   }
 }
 
