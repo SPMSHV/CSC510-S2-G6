@@ -1,4 +1,43 @@
-# React + TypeScript + Vite
+# CampusBot Client - React + TypeScript + Vite
+
+This is the client application for CampusBot, built with React, TypeScript, and Vite.
+
+## Features
+
+### Milestone 2: Student Mobile UI
+- **Home Page** - Browse restaurants and search functionality
+- **Restaurant Detail** - View menu items and add to cart
+- **Checkout** - Place orders with delivery location
+- **Order Tracking** - Real-time order status with progress bar
+- **My Orders** - View order history and track active orders
+- **Authentication** - User registration and login
+
+### Milestone 3: Fleet Dashboard
+- **Fleet Dashboard** - Real-time view of all 5 simulated robots
+- **Live Telemetry** - Battery, location, speed, and distance metrics
+- **Stop Command** - Emergency stop functionality for fleet control
+- **Connection Status** - Live indicator for SSE stream connection
+
+## Getting Started
+
+Install dependencies and start the development server:
+
+```bash
+npm install
+npm run dev
+```
+
+The client will be available at `http://localhost:5173` (or the next available port).
+
+## Available Routes
+
+- `/` - Home page with restaurant browsing
+- `/restaurant/:id` - Restaurant detail page with menu
+- `/orders` - My Orders page (requires authentication)
+- `/orders/:id` - Order tracking page (requires authentication)
+- `/fleet` - Fleet Dashboard (Milestone 3)
+
+## Development
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

@@ -1,8 +1,13 @@
 openapi: 3.0.3
 info:
   title: CampusBot API
-  version: 0.1.0
-  description: Core API scaffolding & data model (Milestone 1)
+  version: 0.2.0
+  description: |
+    CampusBot API - Milestones 1-3
+    
+    Milestone 1: Core API scaffolding & data model (Orders, Robots, Users, Restaurants)
+    Milestone 2: Authentication & Student Mobile UI
+    Milestone 3: Simulated Robot Telemetry & Fleet Dashboard
 servers:
   - url: http://localhost:3000
 paths:
@@ -285,6 +290,59 @@ paths:
           description: No content
         '404':
           description: Not found
+  /api/telemetry/snapshot:
+    get:
+      summary: Get telemetry snapshot (Milestone 3)
+      description: Returns current state of all 5 simulated robots
+      tags:
+        - Telemetry
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TelemetryRobot'
+  /api/telemetry/stream:
+    get:
+      summary: Stream telemetry updates via SSE (Milestone 3)
+      description: Server-Sent Events stream providing real-time robot telemetry updates
+      tags:
+        - Telemetry
+      responses:
+        '200':
+          description: SSE stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+              example: |
+                event: telemetry
+                data: [{"id":"sim-1","robotId":"RB-SIM-1","status":"IDLE","batteryPercent":85,"location":{"lat":35.772,"lng":-78.674},"speed":0,"distanceTraveled":0}]
+  /api/telemetry/robots/{id}/stop:
+    post:
+      summary: Send stop command to robot (Milestone 3)
+      description: Simulated emergency stop command that sets robot status to OFFLINE
+      tags:
+        - Telemetry
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
 components:
   schemas:
     OrderItem:
@@ -416,6 +474,39 @@ components:
           type: integer
         location:
           $ref: '#/components/schemas/Location'
+    TelemetryRobot:
+      type: object
+      description: Simulated robot telemetry data (Milestone 3)
+      properties:
+        id:
+          type: string
+          example: sim-1
+        robotId:
+          type: string
+          example: RB-SIM-1
+        status:
+          type: string
+          enum: [IDLE, ASSIGNED, EN_ROUTE, CHARGING, MAINTENANCE, OFFLINE]
+          example: IDLE
+        batteryPercent:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 85
+        location:
+          $ref: '#/components/schemas/Location'
+        speed:
+          type: number
+          description: Current speed in km/h
+          example: 5.2
+        distanceTraveled:
+          type: number
+          description: Total distance traveled in meters
+          example: 1234.5
+        lastUpdate:
+          type: string
+          format: date-time
+          description: ISO timestamp of last update
     User:
       type: object
       properties:

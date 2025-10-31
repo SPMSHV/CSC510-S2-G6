@@ -4,6 +4,7 @@ import { router as robotsRouter } from './routes/robots';
 import { router as usersRouter } from './routes/users';
 import { router as authRouter } from './routes/auth';
 import { router as restaurantsRouter } from './routes/restaurants';
+import { router as telemetryRouter } from './routes/telemetry';
 
 export const router = Router();
 
@@ -12,3 +13,4 @@ router.use('/orders', ordersRouter);
 router.use('/robots', robotsRouter);
 router.use('/users', usersRouter);
 router.use('/restaurants', restaurantsRouter);
+router.use('/telemetry', telemetryRouter);
