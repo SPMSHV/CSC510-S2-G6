@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Restaurant, MenuItem, User, AuthResponse } from '../types';
+import type { Restaurant, MenuItem, User, AuthResponse, Order, OrderTrackingInfo } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
@@ -161,5 +161,55 @@ export const getCurrentUser = async (): Promise<User> => {
 
 export const logout = (): void => {
   clearAuthData();
+};
+
+// Order API functions
+export interface CreateOrderRequest {
+  userId: string;
+  vendorId: string;
+  items: Array<{
+    name: string;
+    quantity: number;
+    price: number;
+  }>;
+  deliveryLocation: string;
+  deliveryLocationLat?: number;
+  deliveryLocationLng?: number;
+}
+
+export const createOrder = async (orderData: CreateOrderRequest): Promise<Order> => {
+  try {
+    const response = await apiClient.post<Order>('/orders', orderData);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.error || 'Failed to create order');
+    }
+    throw new Error('Failed to create order');
+  }
+};
+
+export const getUserOrders = async (): Promise<Order[]> => {
+  try {
+    const response = await apiClient.get<Order[]>('/orders/my-orders');
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.error || 'Failed to fetch orders');
+    }
+    throw new Error('Failed to fetch orders');
+  }
+};
+
+export const getOrderTracking = async (orderId: string): Promise<OrderTrackingInfo> => {
+  try {
+    const response = await apiClient.get<OrderTrackingInfo>(`/orders/${orderId}/track`);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.error || 'Failed to fetch order tracking');
+    }
+    throw new Error('Failed to fetch order tracking');
+  }
 };
 

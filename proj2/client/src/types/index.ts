@@ -57,3 +57,27 @@ export interface AuthResponse {
   token: string;
 }
 
+export interface Robot {
+  id: string;
+  robotId: string;
+  status: 'IDLE' | 'ASSIGNED' | 'EN_ROUTE' | 'CHARGING' | 'MAINTENANCE' | 'OFFLINE';
+  batteryPercent: number;
+  location: Location;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OrderStatusProgress {
+  status: Order['status'];
+  progress: number; // 0-100
+  statusLabel: string;
+  estimatedTimeToNext?: number; // minutes
+}
+
+export interface OrderTrackingInfo {
+  order: Order;
+  progress: OrderStatusProgress;
+  robot: Robot | null;
+  estimatedDeliveryTime?: number; // minutes
+}
+
