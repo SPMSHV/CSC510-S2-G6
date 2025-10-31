@@ -19,6 +19,9 @@
     "migrate": "ts-node src/db/migrate.ts",
     "migrate:rollback": "ts-node src/db/rollback.ts",
     "seed": "ts-node src/db/seed.ts",
+    "seed:full": "ts-node src/db/seed.ts",
+    "dev:with-seed": "ts-node scripts/dev-with-seed.ts",
+    "dev:full": "ts-node scripts/dev-with-seed.ts --frontend",
     "db:reset": "npm run migrate:rollback || true && npm run migrate && npm run seed"
   },
   "engines": {
