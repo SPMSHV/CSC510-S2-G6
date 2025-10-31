@@ -110,6 +110,25 @@ npm run preview
 - **Client UI**: http://localhost:5173 (development)
 - **Swagger UI**: http://localhost:3000/api-docs
 - **Health Check**: http://localhost:3000/health
+- **Fleet Dashboard**: http://localhost:5173/fleet (Milestone 3)
+
+## Starting the Telemetry Simulator (Milestone 3)
+
+The telemetry simulator is automatically started when the backend runs. To enable it explicitly, you can set the environment variable:
+
+```bash
+# In your .env file or environment
+ENABLE_TELEMETRY_SIM=1
+```
+
+Or run the telemetry simulator script directly:
+
+```bash
+# From the proj2 directory
+npm run dev:telemetry
+```
+
+The fleet dashboard will automatically connect to the telemetry stream when you navigate to `/fleet` in the client UI.
 
 ## Testing
 
