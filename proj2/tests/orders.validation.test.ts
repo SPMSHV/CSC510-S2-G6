@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { createApp } from './helpers/request';
+import { createApp, createAuthToken } from './helpers/request';
 
 const app = createApp();
 
@@ -37,8 +37,13 @@ describe('Orders API - validation', () => {
   test('can transition through multiple statuses', async () => {
     const create = await request(app).post('/api/orders').send(baseValid);
     const id = create.body.id;
+    // Create admin token for updating any order
+    const adminToken = createAuthToken('admin-1', 'admin@test.com', 'ADMIN');
     for (const s of statuses) {
-      const res = await request(app).patch(`/api/orders/${id}`).send({ status: s });
+      const res = await request(app)
+        .patch(`/api/orders/${id}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ status: s });
       expect(res.status).toBe(200);
       expect(res.body.status).toBe(s);
     }
@@ -48,7 +53,12 @@ describe('Orders API - validation', () => {
   test.each(invalidStatuses.map((s, i) => [i, s]))('rejects invalid status %p', async (_i, badStatus) => {
     const create = await request(app).post('/api/orders').send(baseValid);
     const id = create.body.id;
-    const res = await request(app).patch(`/api/orders/${id}`).send({ status: badStatus as any });
+    // Create admin token for updating any order
+    const adminToken = createAuthToken('admin-1', 'admin@test.com', 'ADMIN');
+    const res = await request(app)
+      .patch(`/api/orders/${id}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ status: badStatus as any });
     expect(res.status).toBe(400);
   });
 

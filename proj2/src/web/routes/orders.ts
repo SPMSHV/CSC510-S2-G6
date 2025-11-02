@@ -67,6 +67,30 @@ router.get('/my-orders', authenticate, async (req: AuthRequest, res: Response) =
   }
 });
 
+// Get orders for current vendor (must be before /:id route)
+router.get('/vendor-orders', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.userId || !req.user) {
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
+
+    // Only vendors and admins can access vendor orders
+    if (req.user.role !== 'VENDOR' && req.user.role !== 'ADMIN') {
+      return res.status(403).json({ error: 'Access denied. Vendor role required.' });
+    }
+
+    if (backend === 'postgres') {
+      const vendorOrders = await orderQueries.getOrdersByVendorId(req.userId);
+      return res.json(vendorOrders);
+    }
+
+    const vendorOrders = Object.values(orders).filter((order) => order.vendorId === req.userId);
+    res.json(vendorOrders);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch vendor orders' });
+  }
+});
+
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     if (backend === 'postgres') {
@@ -126,12 +150,27 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-router.patch('/:id', async (req: Request, res: Response) => {
+router.patch('/:id', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const { error, value } = updateSchema.validate(req.body);
     if (error) return res.status(400).json({ error: error.message });
 
     if (backend === 'postgres') {
+      // First get the order to check authorization
+      const existingOrder = await orderQueries.getOrderById(req.params.id);
+      if (!existingOrder) return res.status(404).json({ error: 'Order not found' });
+
+      // Authorization: vendor can only update their own orders, admin can update any
+      if (req.user?.role !== 'ADMIN') {
+        if (req.user?.role === 'VENDOR') {
+          if (existingOrder.vendorId !== req.userId) {
+            return res.status(403).json({ error: 'Access denied. You can only update your own orders.' });
+          }
+        } else if (existingOrder.userId !== req.userId) {
+          return res.status(403).json({ error: 'Access denied.' });
+        }
+      }
+
       // First update the order status
       const order = await orderQueries.updateOrder(req.params.id, { status: value.status });
       if (!order) return res.status(404).json({ error: 'Order not found' });
@@ -146,6 +185,17 @@ router.patch('/:id', async (req: Request, res: Response) => {
 
     const order = orders[req.params.id];
     if (!order) return res.status(404).json({ error: 'Order not found' });
+
+    // Authorization check for memory backend
+    if (req.user?.role !== 'ADMIN') {
+      if (req.user?.role === 'VENDOR' && order.vendorId !== req.userId) {
+        return res.status(403).json({ error: 'Access denied. You can only update your own orders.' });
+      }
+      if (order.userId !== req.userId && order.vendorId !== req.userId) {
+        return res.status(403).json({ error: 'Access denied.' });
+      }
+    }
+
     order.status = value.status as orderQueries.Order['status'];
     order.updatedAt = new Date().toISOString();
     res.json(order);
