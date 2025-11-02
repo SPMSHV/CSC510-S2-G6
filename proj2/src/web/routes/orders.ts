@@ -198,6 +198,22 @@ router.patch('/:id', authenticate, async (req: AuthRequest, res: Response) => {
 
     order.status = value.status as orderQueries.Order['status'];
     order.updatedAt = new Date().toISOString();
+
+    // Process status change which may trigger robot assignment (memory backend)
+    if (backend === 'memory') {
+      try {
+        await processOrderStatusChange(req.params.id, value.status);
+        // Fetch updated order to return latest state
+        const updatedOrder = orders[req.params.id];
+        if (updatedOrder) {
+          return res.json(updatedOrder);
+        }
+      } catch (error) {
+        // If processOrderStatusChange fails, still return the updated order
+        // This handles cases where order might not exist in postgres but does in memory
+      }
+    }
+
     res.json(order);
   } catch (error) {
     res.status(500).json({ error: 'Failed to update order' });
