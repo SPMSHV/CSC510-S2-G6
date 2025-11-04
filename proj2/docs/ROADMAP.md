@@ -51,18 +51,24 @@ This document outlines the planned development phases for the CampusBot project.
 - [x] Telemetry test suite (378 total tests)
 - [x] Enhanced dashboard UI with Header component
 
-## Milestone 4: Vendor Kiosk + Order Handoff Flow
+## Milestone 4: Vendor Kiosk + Order Handoff Flow ✅
 
-**Status**: In Progress
+**Status**: Completed
 
-### Planned Features:
-- [ ] Vendor kiosk UI for order management
-- [ ] Order acceptance workflow
-- [ ] Order status transitions (CREATED → PREPARING → READY)
-- [ ] Robot assignment integration
-- [ ] Order handoff flow from student → vendor → robot
-- [ ] End-to-end demo video walkthrough
-- [ ] Vendor-specific dashboard for managing orders
+### Completed Features:
+- [x] Vendor kiosk UI for order management
+- [x] Order acceptance workflow
+- [x] Order status transitions (CREATED → PREPARING → READY)
+- [x] Robot assignment integration
+- [x] Order handoff flow from student → vendor → robot
+- [x] Vendor-specific dashboard for managing orders
+- [x] API endpoint for vendors to fetch their orders (GET /api/orders/vendor-orders)
+- [x] Authorization for vendor order status updates
+- [x] Order filtering by status in vendor kiosk
+- [x] Order details modal with full information
+- [x] Real-time order updates with polling
+- [x] Comprehensive test suite (40+ tests for vendor functionality)
+- [x] End-to-end order lifecycle: CREATED → PREPARING → READY → ASSIGNED → EN_ROUTE → DELIVERED
 
 ## Future Considerations
 

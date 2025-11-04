@@ -213,3 +213,28 @@ export const getOrderTracking = async (orderId: string): Promise<OrderTrackingIn
   }
 };
 
+// Vendor API functions
+export const getVendorOrders = async (): Promise<Order[]> => {
+  try {
+    const response = await apiClient.get<Order[]>('/orders/vendor-orders');
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.error || 'Failed to fetch vendor orders');
+    }
+    throw new Error('Failed to fetch vendor orders');
+  }
+};
+
+export const updateOrderStatus = async (orderId: string, status: Order['status']): Promise<Order> => {
+  try {
+    const response = await apiClient.patch<Order>(`/orders/${orderId}`, { status });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.error || 'Failed to update order status');
+    }
+    throw new Error('Failed to update order status');
+  }
+};
+

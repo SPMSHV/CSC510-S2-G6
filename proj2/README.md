@@ -256,10 +256,16 @@ proj2/
 - Ability to send simulated "stop" command
 - Real-time SSE streaming for live updates
 
-### 📋 Milestone 4: Vendor Kiosk + Order Handoff Flow (PLANNED)
-- Kiosk UI for vendors to accept orders
-- API integration for order lifecycle management
-- End-to-end demo showing student → vendor → robot assignment flow
+### ✅ Milestone 4: Vendor Kiosk + Order Handoff Flow (COMPLETED)
+- Vendor kiosk UI for order management (`/vendor/kiosk`)
+- Order status transitions (CREATED → PREPARING → READY)
+- Automatic robot assignment when order becomes READY
+- Vendor authorization and access control
+- Real-time order updates with status filtering
+- Order details modal with full information
+- End-to-end order lifecycle: student → vendor → robot assignment
+- Comprehensive test suite (40+ tests)
+- See [DEMO_GUIDE.md](docs/DEMO_GUIDE.md) for end-to-end demo instructions
 
 ---
 

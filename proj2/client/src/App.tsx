@@ -6,6 +6,7 @@ import RestaurantDetailPage from './pages/RestaurantDetailPage';
 import MyOrdersPage from './pages/MyOrdersPage';
 import OrderTrackingPage from './pages/OrderTrackingPage';
 import FleetDashboardPage from './pages/FleetDashboardPage';
+import VendorKioskPage from './pages/VendorKioskPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/orders" element={<MyOrdersPage />} />
             <Route path="/orders/:id" element={<OrderTrackingPage />} />
             <Route path="/fleet" element={<FleetDashboardPage />} />
+            <Route path="/vendor/kiosk" element={<VendorKioskPage />} />
           </Routes>
         </BrowserRouter>
       </CartProvider>
