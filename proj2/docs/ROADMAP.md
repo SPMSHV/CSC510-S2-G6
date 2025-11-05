@@ -78,6 +78,35 @@ This document outlines the planned development phases for the CampusBot project.
 - Advanced analytics dashboard
 - Third-party integrations (payment systems, etc.)
 
+## Funding
+
+CampusBot is currently developed as part of an academic course (CSC510 Software Engineering) at NC State University. The project is open source and community-driven. There is no external funding at this time. Development is sustained through:
+
+- Academic course requirements
+- Open source community contributions
+- Volunteer developer time
+
+Future funding opportunities may include:
+- University research grants
+- Industry partnerships
+- Open source foundation support
+
+## Deprecation Policy
+
+When components or APIs are deprecated, we will:
+
+1. **Announce deprecation** at least 6 months before removal
+2. **Update documentation** with migration guides
+3. **Mark deprecated features** in code with `@deprecated` tags
+4. **Provide alternative solutions** in the deprecation notice
+5. **Maintain backward compatibility** during the deprecation period when possible
+
+Deprecation notices will be published in:
+- Release notes (CHANGES_SUMMARY.md)
+- Project roadmap (this file)
+- API documentation (OpenAPI spec)
+- GitHub issues and releases
+
 ## Contributing
 
 This roadmap is a living document. Feel free to suggest changes or additions by opening an issue or pull request.

@@ -1,12 +1,13 @@
 # 🤖 CampusBot — Autonomous Campus Food Delivery
 
-![Build Status](https://img.shields.io/github/actions/workflow/status/your-org/campusbot/ci.yml?branch=main)
-![Tests](https://img.shields.io/badge/tests-passing-success)
-![Coverage](https://img.shields.io/badge/coverage-90%2B%25-brightgreen)
-![License](https://img.shields.io/badge/license-MIT-blue)
-![Node Version](https://img.shields.io/badge/node-18.x-green)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
-![Code Style](https://img.shields.io/badge/code%20style-prettier-ff69b4)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/SPMSHV/CSC510-S2-G6/ci.yml?branch=main&label=Build)](https://github.com/SPMSHV/CSC510-S2-G6/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-819%20passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/tree/main/proj2/tests)
+[![Coverage](https://img.shields.io/badge/coverage-90%2B%25-brightgreen)](https://github.com/SPMSHV/CSC510-S2-G6/tree/main/proj2/tests)
+[![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/SPMSHV/CSC510-S2-G6/blob/main/proj2/LICENSE.md)
+[![Node Version](https://img.shields.io/badge/node-18.x-green)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+[![Code Style](https://img.shields.io/badge/code%20style-prettier-ff69b4)](https://github.com/SPMSHV/CSC510-S2-G6/blob/main/proj2/.prettierrc)
+[![ESLint](https://img.shields.io/badge/ESLint-enabled-4B32C3)](https://github.com/SPMSHV/CSC510-S2-G6/blob/main/proj2/eslint.config.js)
 
 **Tagline:** Robots on campus. Meals on time. Operations you can trust.
 
@@ -46,7 +47,7 @@ Online and on-campus food options are fragmented, slow, and costly to manage whe
 - **Project Name:** CampusBot
 - **Group #:** 6
 - **Group Members:** 
-- **Repository:** [GitHub Link](https://github.com/your-org/campusbot)
+- **Repository:** [GitHub Link](https://github.com/SPMSHV/CSC510-S2-G6)
 - **Discussion Forum:** [Discord/Forum QR Code Link]
 
 ---
@@ -275,6 +276,67 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
+## 💬 Support
+
+### Getting Help
+
+- **Documentation**: Check [INSTALL.md](INSTALL.md) for installation and setup guides
+- **API Documentation**: Visit Swagger UI at `http://localhost:3000/api-docs`
+- **Issues**: Report bugs or request features via [GitHub Issues](https://github.com/your-org/campusbot/issues)
+- **Questions**: Open a GitHub issue with the `question` label
+
+### What Support We Provide
+
+- **For Users**: 
+  - Installation and setup assistance
+  - API usage documentation
+  - Troubleshooting common issues
+  - Bug fixes and feature requests
+
+- **For Developers**:
+  - Code contribution guidelines (see [CONTRIBUTING.md](CONTRIBUTING.md))
+  - Code review and feedback on pull requests
+  - Architecture and design discussions
+  - Test coverage and code quality standards
+
+---
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**Issue**: Tests failing with database connection errors
+- **Solution**: Ensure PostgreSQL is running if using database mode, or use in-memory mode for development (`npm run dev`)
+
+**Issue**: Port 3000 already in use
+- **Solution**: Change the `PORT` environment variable in `.env` or stop the process using port 3000
+
+**Issue**: Client UI not loading
+- **Solution**: Ensure backend is running first, then start client with `cd client && npm run dev`
+
+**Issue**: Telemetry stream not connecting
+- **Solution**: Check that telemetry simulator is enabled (`ENABLE_TELEMETRY_SIM=1`) or run `npm run dev:telemetry`
+
+**Issue**: Authentication errors
+- **Solution**: Ensure JWT_SECRET is set in `.env` file
+
+**Issue**: Build errors with TypeScript
+- **Solution**: Run `npm install` to ensure all dependencies are installed, then try `npm run build`
+
+For more detailed troubleshooting, see [INSTALL.md](INSTALL.md).
+
+---
+
 ## 📄 License
 
 MIT — see [LICENSE.md](LICENSE.md)
+
+### Citation
+
+If you use CampusBot in your research or project, please cite it as:
+
+```
+CampusBot: Autonomous Campus Food Delivery System
+Group 6, CSC510 Software Engineering, NC State University
+https://github.com/your-org/campusbot
+```

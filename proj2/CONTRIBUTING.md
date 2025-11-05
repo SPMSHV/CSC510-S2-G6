@@ -29,6 +29,10 @@ Thank you for your interest in contributing to CampusBot! This document provides
 
 Please use the issue templates provided in the repository for bug reports and feature requests.
 
+## Intellectual Property
+
+Contributors retain copyright of their contributions. By contributing to CampusBot, you agree that your contributions will be licensed under the same MIT License as the project. This ensures that contributions remain open source and available to the community while maintaining the project's licensing consistency.
+
 ## Questions?
 
 Feel free to open an issue for any questions or concerns.
