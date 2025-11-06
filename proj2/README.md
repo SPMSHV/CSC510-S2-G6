@@ -1,13 +1,13 @@
 # 🤖 CampusBot — Autonomous Campus Food Delivery
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/SPMSHV/CSC510-S2-G6/ci.yml?branch=main&label=Build)](https://github.com/SPMSHV/CSC510-S2-G6/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-419%20passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19131527725)
-[![Coverage](https://img.shields.io/badge/coverage-74%25-green)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19131527725)
+[![Tests](https://img.shields.io/badge/tests-419%20passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19141565459)
+[![Coverage](https://img.shields.io/badge/coverage-74%25-green)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19141565459)
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/SPMSHV/CSC510-S2-G6/blob/main/proj2/LICENSE.md)
 [![Node Version](https://img.shields.io/badge/node-18.x-green)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19131527725)
-[![ESLint](https://img.shields.io/badge/ESLint-passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19131527725)
-[![Prettier](https://img.shields.io/badge/Prettier-formatted-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19131527725)
+[![TypeScript](https://img.shields.io/badge/TypeScript-passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19141565459)
+[![ESLint](https://img.shields.io/badge/ESLint-passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19141565459)
+[![Prettier](https://img.shields.io/badge/Prettier-formatted-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19141565459)
 [![DOI](https://zenodo.org/badge/1048731021.svg)](https://doi.org/10.5281/zenodo.17544417)
 
 **Tagline:** Robots on campus. Meals on time. Operations you can trust.
