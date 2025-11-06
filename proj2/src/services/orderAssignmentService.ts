@@ -68,10 +68,8 @@ async function findNearestAvailableRobot(
   deliveryLng: number,
 ): Promise<robotQueries.Robot | null> {
   const availableRobots = await getAvailableRobots();
-  // eslint-disable-next-line no-console
   console.log(`[Robot Assignment] Found ${availableRobots.length} available robots`);
   if (availableRobots.length === 0) {
-    // eslint-disable-next-line no-console
     console.log(`[Robot Assignment] No available robots (all robots may be ASSIGNED, EN_ROUTE, CHARGING, etc.)`);
     return null;
   }
@@ -138,7 +136,6 @@ async function syncTelemetryRobots(): Promise<void> {
 async function processWaitingReadyOrders(): Promise<void> {
   try {
     const readyOrders = await getReadyOrdersWithoutRobots();
-    // eslint-disable-next-line no-console
     console.log(`[Robot Assignment] Polling: Found ${readyOrders.length} READY orders without robots`);
     let assigned = false;
 
@@ -146,12 +143,10 @@ async function processWaitingReadyOrders(): Promise<void> {
       try {
         // Only process orders with delivery coordinates
         if (!order.deliveryLocationLat || !order.deliveryLocationLng) {
-          // eslint-disable-next-line no-console
           console.log(`[Robot Assignment] Order ${order.id} is READY but missing delivery coordinates, skipping`);
           continue;
         }
 
-        // eslint-disable-next-line no-console
         console.log(`[Robot Assignment] Attempting to assign robot to order ${order.id} (delivery: ${order.deliveryLocationLat}, ${order.deliveryLocationLng})`);
         const nearestRobot = await findNearestAvailableRobot(
           order.deliveryLocationLat,
@@ -163,10 +158,8 @@ async function processWaitingReadyOrders(): Promise<void> {
           // Schedule automatic transitions for the newly assigned order
           await orderAutomationService.scheduleTransitions(order.id);
           assigned = true;
-          // eslint-disable-next-line no-console
           console.log(`[Robot Assignment] Successfully assigned robot ${nearestRobot.robotId} to order ${order.id}`);
         } else {
-          // eslint-disable-next-line no-console
           console.log(`[Robot Assignment] No available robots found for order ${order.id}`);
         }
       } catch (error) {

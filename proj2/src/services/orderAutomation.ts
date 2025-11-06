@@ -1,5 +1,4 @@
 import * as orderQueries from '../db/queries/orders';
-import * as robotQueries from '../db/queries/robots';
 import { processOrderStatusChange } from './robotAssignment';
 import { orders } from '../web/routes/orders';
 import { robots } from '../web/routes/robots';
@@ -38,7 +37,6 @@ class OrderAutomationService {
     }
 
     if (!order) {
-      // eslint-disable-next-line no-console
       console.log(`[Order Automation] Order ${orderId} not found, skipping automation`);
       return;
     }
@@ -48,7 +46,6 @@ class OrderAutomationService {
 
     if (order.status === 'ASSIGNED') {
       // Schedule transition to EN_ROUTE
-      // eslint-disable-next-line no-console
       console.log(`[Order Automation] Scheduling ASSIGNED → EN_ROUTE transition for order ${orderId} in ${ASSIGNED_TO_EN_ROUTE_DELAY / 1000} seconds`);
       const timeout = setTimeout(async () => {
         await this.transitionToEnRoute(orderId);
@@ -61,7 +58,6 @@ class OrderAutomationService {
       });
     } else if (order.status === 'EN_ROUTE') {
       // Schedule transition to DELIVERED
-      // eslint-disable-next-line no-console
       console.log(`[Order Automation] Scheduling EN_ROUTE → DELIVERED transition for order ${orderId} in ${EN_ROUTE_TO_DELIVERED_DELAY / 1000} seconds`);
       const timeout = setTimeout(async () => {
         await this.transitionToDelivered(orderId);
@@ -73,7 +69,6 @@ class OrderAutomationService {
         targetStatus: 'DELIVERED',
       });
     } else {
-      // eslint-disable-next-line no-console
       console.log(`[Order Automation] Order ${orderId} is in ${order.status} status, no automation needed`);
     }
   }
@@ -113,14 +108,12 @@ class OrderAutomationService {
         }
       }
 
-      // eslint-disable-next-line no-console
       console.log(`[Order Automation] Order ${orderId} transitioned from ASSIGNED to EN_ROUTE`);
 
       // Schedule next transition
       await this.scheduleTransitions(orderId);
       this.timers.delete(orderId);
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(`[Order Automation] Failed to transition order ${orderId} to EN_ROUTE:`, error);
       this.timers.delete(orderId);
     }
@@ -164,11 +157,9 @@ class OrderAutomationService {
         }
       }
 
-      // eslint-disable-next-line no-console
       console.log(`[Order Automation] Order ${orderId} transitioned from EN_ROUTE to DELIVERED`);
       this.timers.delete(orderId);
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(`[Order Automation] Failed to transition order ${orderId} to DELIVERED:`, error);
       this.timers.delete(orderId);
     }
@@ -202,7 +193,6 @@ class OrderAutomationService {
       this.processPendingOrders();
     }, pollIntervalSeconds * 1000);
 
-    // eslint-disable-next-line no-console
     console.log(`[Order Automation Service] Started polling every ${pollIntervalSeconds} seconds`);
   }
 
@@ -222,7 +212,6 @@ class OrderAutomationService {
     this.timers.clear();
     this.running = false;
 
-    // eslint-disable-next-line no-console
     console.log('[Order Automation Service] Stopped');
   }
 
@@ -244,13 +233,11 @@ class OrderAutomationService {
         enRouteOrders = Object.values(orders).filter((o) => o.status === 'EN_ROUTE');
       }
 
-      // eslint-disable-next-line no-console
       console.log(`[Order Automation] Polling: Found ${assignedOrders.length} ASSIGNED orders, ${enRouteOrders.length} EN_ROUTE orders`);
 
       // Schedule transitions for orders that don't have timers yet
       for (const order of assignedOrders) {
         if (!this.timers.has(order.id)) {
-          // eslint-disable-next-line no-console
           console.log(`[Order Automation] Found ASSIGNED order ${order.id} without timer, scheduling transition`);
           await this.scheduleTransitions(order.id);
         }
@@ -258,13 +245,11 @@ class OrderAutomationService {
 
       for (const order of enRouteOrders) {
         if (!this.timers.has(order.id)) {
-          // eslint-disable-next-line no-console
           console.log(`[Order Automation] Found EN_ROUTE order ${order.id} without timer, scheduling transition`);
           await this.scheduleTransitions(order.id);
         }
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error('[Order Automation Service] Error processing pending orders:', error);
     }
   }
