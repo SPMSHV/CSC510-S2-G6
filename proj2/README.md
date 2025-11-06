@@ -8,7 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19141565459)
 [![ESLint](https://img.shields.io/badge/ESLint-passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19141565459)
 [![Prettier](https://img.shields.io/badge/Prettier-formatted-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19141565459)
-[![DOI](https://zenodo.org/badge/1048731021.svg)](https://doi.org/10.5281/zenodo.17544417)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17544418.svg)](https://doi.org/10.5281/zenodo.17544418)
 
 **Tagline:** Robots on campus. Meals on time. Operations you can trust.
 
