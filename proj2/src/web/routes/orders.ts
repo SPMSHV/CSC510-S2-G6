@@ -30,7 +30,14 @@ const updateSchema = Joi.object({
 });
 
 // Fallback in-memory storage for non-postgres backends
-const orders: Record<string, orderQueries.Order> = {};
+export const orders: Record<string, orderQueries.Order> = {};
+
+// Helper function to get ready orders without robots from memory
+export function getReadyOrdersWithoutRobotsFromMemory(): orderQueries.Order[] {
+  return Object.values(orders).filter(
+    (order) => order.status === 'READY' && !order.robotId && order.deliveryLocationLat && order.deliveryLocationLng,
+  );
+}
 
 function computeTotal(items: orderQueries.OrderItem[]): number {
   return items.reduce((sum, item) => sum + item.quantity * item.price, 0);

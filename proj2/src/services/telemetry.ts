@@ -35,7 +35,7 @@ class TelemetryService extends EventEmitter {
         id: `sim-${idx + 1}`,
         robotId,
         status: 'IDLE' as const,
-        batteryPercent: 60 + Math.floor(Math.random() * 40),
+        batteryPercent: 1 + Math.floor(Math.random() * 99),
         location,
         speed: 0,
         distanceTraveled: 0,
@@ -69,6 +69,37 @@ class TelemetryService extends EventEmitter {
     if (!robot) return;
     robot.status = 'OFFLINE';
     this.emitEvent('stopped');
+  }
+
+  /**
+   * Update telemetry robot status by index (0-4) to sync with database robot assignments
+   */
+  updateRobotStatusByIndex(index: number, status: TelemetryRobot['status']): void {
+    this.initializeFleetIfEmpty();
+    if (index >= 0 && index < this.robots.length) {
+      this.robots[index].status = status;
+      this.robots[index].lastUpdate = new Date().toISOString();
+      this.emitEvent('update');
+    }
+  }
+
+  /**
+   * Sync database robot states to telemetry robots
+   * Maps first 5 database robots to telemetry robots by index
+   */
+  syncWithDatabaseRobots(databaseRobots: Array<{ status: TelemetryRobot['status'] }>): void {
+    this.initializeFleetIfEmpty();
+    let updated = false;
+    for (let i = 0; i < Math.min(this.robots.length, databaseRobots.length); i++) {
+      if (this.robots[i].status !== databaseRobots[i].status) {
+        this.robots[i].status = databaseRobots[i].status;
+        this.robots[i].lastUpdate = new Date().toISOString();
+        updated = true;
+      }
+    }
+    if (updated) {
+      this.emitEvent('update');
+    }
   }
 
   private calculateDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
@@ -125,9 +156,10 @@ class TelemetryService extends EventEmitter {
       };
     });
 
-    // Randomly toggle one robot to EN_ROUTE to show motion
+    // Randomly toggle one IDLE robot to EN_ROUTE to show motion (but don't override ASSIGNED robots)
+    // Only change robots that are truly IDLE, not those that might be synced from database
     if (Math.random() < 0.3) {
-      const candidates = this.robots.filter((r) => r.status === 'IDLE' || r.status === 'ASSIGNED');
+      const candidates = this.robots.filter((r) => r.status === 'IDLE');
       if (candidates.length > 0) {
         const pick = candidates[Math.floor(Math.random() * candidates.length)];
         pick.status = 'EN_ROUTE';
