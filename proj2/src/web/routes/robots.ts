@@ -29,7 +29,22 @@ const createSchema = Joi.object({
 });
 
 // Fallback in-memory storage for non-postgres backends
-const robots: Record<string, robotQueries.Robot & { health: RobotHealth }> = {};
+export const robots: Record<string, robotQueries.Robot & { health: RobotHealth }> = {};
+
+// Helper function to get available robots from memory
+export function getAvailableRobotsFromMemory(): robotQueries.Robot[] {
+  return Object.values(robots)
+    .filter((robot) => robot.status === 'IDLE' && robot.batteryPercent > 20)
+    .map((robot) => ({
+      id: robot.id,
+      robotId: robot.robotId,
+      status: robot.status,
+      batteryPercent: robot.batteryPercent,
+      location: robot.location,
+      createdAt: robot.createdAt,
+      updatedAt: robot.updatedAt,
+    }));
+}
 
 function defaultHealth(): RobotHealth {
   return {

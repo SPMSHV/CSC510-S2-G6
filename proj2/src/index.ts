@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { createServer } from './server';
 import { maybeStartTelemetryFromEnv, telemetryService } from './services/telemetry';
+import { maybeStartOrderAssignmentService } from './services/orderAssignmentService';
 
 dotenv.config();
 
@@ -15,4 +16,6 @@ app.listen(port, host, () => {
   // Initialize telemetry simulator conditionally and prime fleet data
   telemetryService.initializeFleetIfEmpty();
   maybeStartTelemetryFromEnv();
+  // Start background service for robot assignment to waiting READY orders
+  maybeStartOrderAssignmentService();
 });

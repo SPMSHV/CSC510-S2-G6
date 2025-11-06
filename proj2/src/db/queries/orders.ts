@@ -84,6 +84,19 @@ export async function getOrdersByStatus(status: Order['status']): Promise<Order[
   return result.rows.map(rowToOrder);
 }
 
+export async function getReadyOrdersWithoutRobots(): Promise<Order[]> {
+  const pool = getPool();
+  const result = await pool.query<OrderRow>(
+    `SELECT * FROM orders
+     WHERE status = 'READY'
+     AND robot_id IS NULL
+     AND delivery_location_lat IS NOT NULL
+     AND delivery_location_lng IS NOT NULL
+     ORDER BY created_at ASC`,
+  );
+  return result.rows.map(rowToOrder);
+}
+
 export async function createOrder(
   userId: string,
   vendorId: string,
