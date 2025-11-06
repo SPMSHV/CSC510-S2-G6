@@ -25,8 +25,15 @@ export default function CheckoutModal({
 }: CheckoutModalProps) {
   const { user } = useAuth();
   const [deliveryLocation, setDeliveryLocation] = useState('');
+  const [deliveryLocationLat, setDeliveryLocationLat] = useState<number | undefined>(undefined);
+  const [deliveryLocationLng, setDeliveryLocationLng] = useState<number | undefined>(undefined);
+  const [useDefaultCoords, setUseDefaultCoords] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Default coordinates for NC State University campus (for testing)
+  const DEFAULT_LAT = 35.7871;
+  const DEFAULT_LNG = -78.6701;
 
   if (!isOpen) return null;
 
@@ -69,7 +76,8 @@ export default function CheckoutModal({
         vendorId,
         items: orderItems,
         deliveryLocation: deliveryLocation.trim(),
-        // Optional: Could add lat/lng here if we had location input
+        deliveryLocationLat: useDefaultCoords ? DEFAULT_LAT : deliveryLocationLat,
+        deliveryLocationLng: useDefaultCoords ? DEFAULT_LNG : deliveryLocationLng,
       });
 
       // Show success message before closing
@@ -77,6 +85,9 @@ export default function CheckoutModal({
       
       onSuccess();
       setDeliveryLocation('');
+      setDeliveryLocationLat(undefined);
+      setDeliveryLocationLng(undefined);
+      setUseDefaultCoords(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to place order');
     } finally {
@@ -157,6 +168,66 @@ export default function CheckoutModal({
               />
               <p className="mt-1 text-xs text-gray-500">
                 Enter the building and room number where you'd like your order delivered
+              </p>
+            </div>
+
+            {/* Coordinates Section */}
+            <div className="mb-4">
+              <div className="flex items-center mb-2">
+                <input
+                  type="checkbox"
+                  id="useDefaultCoords"
+                  checked={useDefaultCoords}
+                  onChange={(e) => {
+                    setUseDefaultCoords(e.target.checked);
+                    if (e.target.checked) {
+                      setDeliveryLocationLat(undefined);
+                      setDeliveryLocationLng(undefined);
+                    }
+                  }}
+                  className="mr-2 h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                />
+                <label htmlFor="useDefaultCoords" className="text-sm font-medium text-gray-700">
+                  Use default coordinates (NC State Campus)
+                </label>
+              </div>
+              
+              {!useDefaultCoords && (
+                <div className="grid grid-cols-2 gap-3 mt-2">
+                  <div>
+                    <label htmlFor="deliveryLat" className="block text-xs font-medium text-gray-700 mb-1">
+                      Latitude
+                    </label>
+                    <input
+                      id="deliveryLat"
+                      type="number"
+                      step="any"
+                      value={deliveryLocationLat ?? ''}
+                      onChange={(e) => setDeliveryLocationLat(e.target.value ? parseFloat(e.target.value) : undefined)}
+                      placeholder="35.7871"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="deliveryLng" className="block text-xs font-medium text-gray-700 mb-1">
+                      Longitude
+                    </label>
+                    <input
+                      id="deliveryLng"
+                      type="number"
+                      step="any"
+                      value={deliveryLocationLng ?? ''}
+                      onChange={(e) => setDeliveryLocationLng(e.target.value ? parseFloat(e.target.value) : undefined)}
+                      placeholder="-78.6701"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none text-sm"
+                    />
+                  </div>
+                </div>
+              )}
+              <p className="mt-1 text-xs text-gray-500">
+                {useDefaultCoords 
+                  ? `Using default coordinates: ${DEFAULT_LAT}, ${DEFAULT_LNG} (NC State Campus)`
+                  : 'Enter custom coordinates or use default for testing'}
               </p>
             </div>
 

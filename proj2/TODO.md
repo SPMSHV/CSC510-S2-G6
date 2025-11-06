@@ -18,7 +18,7 @@ Use this checklist to track your progress on all rubric requirements. Check off 
 | [x] | Q4 - Documentation | 4.1: Make documentation clearly available on website or within software | README.md, docs/ |
 | [x] | Q4 - Documentation | 4.2: Include "quick start" guide with basic examples | INSTALL.md, README.md |
 | [x] | Q4 - Documentation | 4.3: Provide clear, step-by-step instructions for deployment and use | INSTALL.md |
-| [x] | Q4 - Documentation | 4.4: Provide comprehensive guide to all commands, functions and options | docs/BACKEND.md, docs/FRONTEND.md |
+| [x] | Q4 - Documentation | 4.4: Provide comprehensive guide to all commands, functions and options | docs/BACKEND.md, docs/FRONTEND.md, docs/API_REFERENCE.md |
 | [x] | Q4 - Documentation | 4.5: Provide troubleshooting information with symptoms and solutions | README.md troubleshooting section |
 | [x] | Q4 - Documentation | 4.6: Provide comprehensive API documentation (if applicable) | docs/openapi.yaml |
 | [x] | Q4 - Documentation | 4.7: Store documentation under revision control with source code | All docs in repo |
@@ -37,21 +37,21 @@ Use this checklist to track your progress on all rubric requirements. Check off 
 | [x] | Q9 - Accessibility | 9.1: Ensure software adheres to appropriate accessibility conventions/standards | ARIA labels, keyboard navigation, semantic HTML |
 | [x] | Q9 - Accessibility | 9.2: Ensure documentation adheres to appropriate accessibility conventions/standards | docs/ACCESSIBILITY.md, semantic markup, alt text, headings |
 | [x] | Q10 - Source Code Management | 10.1: Store source code in repository under revision control | Git repo |
-| [ ] | Q10 - Source Code Management | 10.2: Ensure each release is a snapshot of the repository | |
-| [ ] | Q10 - Source Code Management | 10.3: Tag releases in the repository | |
-| [x] | Q10 - Source Code Management | 10.4: Maintain stable branch (tests pass, code builds successfully) | 437/437 tests passing |
+| [x] | Q10 - Source Code Management | 10.2: Ensure each release is a snapshot of the repository | docs/RELEASES.md |
+| [x] | Q10 - Source Code Management | 10.3: Tag releases in the repository | docs/RELEASES.md |
+| [x] | Q10 - Source Code Management | 10.4: Maintain stable branch (tests pass, code builds successfully) | 419/419 tests passing |
 | [x] | Q10 - Source Code Management | 10.5: Back up repository | GitHub |
 | [x] | Q11 - Building & Installing | 11.1: Provide publicly-available instructions for building from source | INSTALL.md |
 | [x] | Q11 - Building & Installing | 11.2: Use automated tool for building/packaging software | npm, package.json |
 | [x] | Q11 - Building & Installing | 11.3: Provide publicly-available instructions for deployment | INSTALL.md |
 | [x] | Q11 - Building & Installing | 11.4: List all third-party dependencies in documentation | package.json |
 | [x] | Q11 - Building & Installing | 11.5: List version numbers for all third-party dependencies | package.json |
-| [x] | Q11 - Building & Installing | 11.6: List web address, licences, and mandatory/optional status for dependencies | docs/DEPENDENCIES.md, npm run docs:dependencies |
+| [x] | Q11 - Building & Installing | 11.6: List web address, licences, and mandatory/optional status for dependencies | docs/DEPENDENCIES.md |
 | [x] | Q11 - Building & Installing | 11.7: Enable downloading dependencies via dependency management tool/package manager | npm install |
 | [x] | Q11 - Building & Installing | 11.8: Have tests that can verify successful build/deployment | 437 tests |
 | [x] | Q12 - Testing | 12.1: Have automated test suite for software | Jest, 437 tests |
 | [ ] | Q12 - Testing | 12.2: Have framework to periodically run tests (e.g. nightly) | |
-| [ ] | Q12 - Testing | 12.3: Use continuous integration (tests run automatically on code changes) | |
+| [x] | Q12 - Testing | 12.3: Use continuous integration (tests run automatically on code changes) | .github/workflows/ci.yml |
 | [ ] | Q12 - Testing | 12.4: Make test results publicly visible | |
 | [ ] | Q12 - Testing | 12.5: Document all manually-run tests | |
 | [ ] | Q13 - Community Engagement | 13.1: Maintain resources updated with information (blog, Twitter, RSS, etc.) | |

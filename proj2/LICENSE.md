@@ -1,7 +1,7 @@
 # MIT License
 
-Copyright (c) 2025 CampusBot Team - Group 5
-Pranshav Gajjar, Kalyani, and Contributors
+Copyright (c) 2025 CampusBot Team - Group 6
+Pranshav Gajjar, Aniruddh Sanjeev Bhagwat, Ishan Patel, Hardik Majethia, and Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

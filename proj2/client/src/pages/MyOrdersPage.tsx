@@ -38,6 +38,25 @@ export default function MyOrdersPage() {
       };
 
       fetchOrders();
+
+      // Poll for order updates every 10 seconds if there are active orders
+      const interval = setInterval(() => {
+        if (isAuthenticated) {
+          getUserOrders()
+            .then((data) => {
+              const sorted = data.sort(
+                (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+              );
+              setOrders(sorted);
+            })
+            .catch((err) => {
+              // Silently fail polling errors
+              console.error('Failed to poll orders:', err);
+            });
+        }
+      }, 10000);
+
+      return () => clearInterval(interval);
     }
   }, [isAuthenticated, authLoading, navigate]);
 
