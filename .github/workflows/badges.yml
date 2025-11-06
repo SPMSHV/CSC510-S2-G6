@@ -1,0 +1,289 @@
+name: Update Badges
+
+on:
+  push:
+    branches: ['**']  # Run on all branches
+  pull_request:
+    branches: ['**']  # Run on PRs targeting any branch
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-badges:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: proj2
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: proj2/package-lock.json
+
+    - name: Install dependencies
+      working-directory: proj2
+      run: npm ci
+
+    - name: Run tests with coverage
+      id: tests
+      working-directory: proj2
+      run: |
+        set -e  # Exit on error, but we'll handle failures gracefully
+        echo "::group::Running tests with coverage"
+        
+        # Run tests with coverage and JSON output for reliable parsing
+        # Using npx jest directly to avoid npm script issues
+        npx jest --coverage --json --outputFile=test-results.json --runInBand 2>&1 | tee test-output.txt || TEST_EXIT_CODE=$?
+        
+        echo "::endgroup::"
+        
+        # Debug: Show test output summary
+        echo "::group::Test Output Summary"
+        if [ -f "test-output.txt" ]; then
+          echo "Last 50 lines of test output:"
+          tail -50 test-output.txt || true
+        fi
+        echo "::endgroup::"
+        
+        # Extract test count from Jest JSON output (most reliable)
+        TEST_COUNT=""
+        if [ -f "test-results.json" ]; then
+          echo "::group::Extracting test count from JSON"
+          TEST_COUNT=$(node -e "try { const data = require('./test-results.json'); console.log(data.numPassedTests || 0); } catch(e) { console.log('0'); }" 2>&1 || echo "")
+          echo "Extracted from JSON: $TEST_COUNT"
+          echo "::endgroup::"
+        else
+          echo "⚠️ Warning: test-results.json not found"
+        fi
+        
+        # Fallback: Extract from text output if JSON parsing failed
+        if [ -z "$TEST_COUNT" ] || [ "$TEST_COUNT" = "0" ] || [ "$TEST_COUNT" = "null" ] || [ "$TEST_COUNT" = "" ]; then
+          echo "::group::Fallback: Extracting from text output"
+          if [ -f "test-output.txt" ]; then
+            TEST_OUTPUT=$(cat test-output.txt)
+            
+            # Pattern 1: "Tests: X passed"
+            TEST_COUNT=$(echo "$TEST_OUTPUT" | grep -oE 'Tests:\s+[0-9]+\s+passed' | grep -oE '[0-9]+' | head -1 || echo "")
+            echo "Pattern 1 result: $TEST_COUNT"
+            
+            # Pattern 2: "X passed" (standalone)
+            if [ -z "$TEST_COUNT" ]; then
+              TEST_COUNT=$(echo "$TEST_OUTPUT" | grep -oE '([0-9]+)\s+passed' | grep -oE '[0-9]+' | head -1 || echo "")
+              echo "Pattern 2 result: $TEST_COUNT"
+            fi
+            
+            # Pattern 3: Jest summary format
+            if [ -z "$TEST_COUNT" ]; then
+              TEST_COUNT=$(echo "$TEST_OUTPUT" | grep -oE 'Test Suites:.*([0-9]+)\s+passed' | grep -oE '[0-9]+' | head -1 || echo "")
+              echo "Pattern 3 result: $TEST_COUNT"
+            fi
+            
+            # Pattern 4: Look for "PASS" line
+            if [ -z "$TEST_COUNT" ]; then
+              TEST_COUNT=$(echo "$TEST_OUTPUT" | grep -oE 'PASS.*[0-9]+\s+passed' | grep -oE '[0-9]+' | head -1 || echo "")
+              echo "Pattern 4 result: $TEST_COUNT"
+            fi
+            
+            # Pattern 5: Look for summary at end
+            if [ -z "$TEST_COUNT" ]; then
+              TEST_COUNT=$(echo "$TEST_OUTPUT" | tail -50 | grep -oE '[0-9]+\s+passing' | grep -oE '[0-9]+' | head -1 || echo "")
+              echo "Pattern 5 result: $TEST_COUNT"
+            fi
+          fi
+          echo "Final extracted count: $TEST_COUNT"
+          echo "::endgroup::"
+        fi
+        
+        # Ensure we have a valid number
+        if [ -z "$TEST_COUNT" ] || [ "$TEST_COUNT" = "0" ] || [ "$TEST_COUNT" = "null" ] || [ "$TEST_COUNT" = "" ]; then
+          echo "⚠️ Warning: Could not extract test count, defaulting to 0"
+          TEST_COUNT="0"
+        fi
+        
+        echo "test_count=$TEST_COUNT" >> $GITHUB_OUTPUT
+        
+        # Get workflow run URL for linking
+        WORKFLOW_RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        echo "workflow_url=$WORKFLOW_RUN_URL" >> $GITHUB_OUTPUT
+        
+        # Debug output
+        echo "✅ Final test count: $TEST_COUNT"
+        if [ -f "test-results.json" ]; then
+          echo "📊 Test results summary:"
+          node -e "try { const data = require('./test-results.json'); console.log('Total:', data.numTotalTests || 0, 'Passed:', data.numPassedTests || 0, 'Failed:', data.numFailedTests || 0); } catch(e) { console.log('Error reading JSON:', e.message); }" 2>&1 || true
+        fi
+
+    - name: Calculate coverage percentage
+      id: coverage
+      working-directory: proj2
+      run: |
+        echo "::group::Calculating coverage"
+        COVERAGE_PERCENT=0
+        
+        if [ -f "coverage/lcov.info" ]; then
+          echo "Found coverage/lcov.info file"
+          # Parse lcov.info to calculate overall coverage
+          # Sum up LF (lines found) and LH (lines hit) across all files
+          TOTAL_LF=0
+          TOTAL_LH=0
+          
+          while IFS= read -r line || [ -n "$line" ]; do
+            if [[ $line == LF:* ]]; then
+              LF=$(echo "$line" | grep -oE '[0-9]+' | head -1 || echo "0")
+              TOTAL_LF=$((TOTAL_LF + LF))
+            elif [[ $line == LH:* ]]; then
+              LH=$(echo "$line" | grep -oE '[0-9]+' | head -1 || echo "0")
+              TOTAL_LH=$((TOTAL_LH + LH))
+            fi
+          done < coverage/lcov.info
+          
+          echo "Total lines found: $TOTAL_LF"
+          echo "Total lines hit: $TOTAL_LH"
+          
+          if [ $TOTAL_LF -gt 0 ]; then
+            COVERAGE_PERCENT=$(awk "BEGIN {printf \"%.0f\", ($TOTAL_LH / $TOTAL_LF) * 100}")
+          else
+            COVERAGE_PERCENT=0
+            echo "⚠️ Warning: No lines found in coverage file"
+          fi
+        else
+          echo "⚠️ Warning: coverage/lcov.info not found"
+          COVERAGE_PERCENT=0
+        fi
+        
+        echo "coverage_percent=$COVERAGE_PERCENT" >> $GITHUB_OUTPUT
+        
+        # Determine badge color based on coverage
+        if [ $COVERAGE_PERCENT -ge 80 ]; then
+          COVERAGE_COLOR="brightgreen"
+        elif [ $COVERAGE_PERCENT -ge 60 ]; then
+          COVERAGE_COLOR="green"
+        elif [ $COVERAGE_PERCENT -ge 40 ]; then
+          COVERAGE_COLOR="yellow"
+        else
+          COVERAGE_COLOR="red"
+        fi
+        echo "coverage_color=$COVERAGE_COLOR" >> $GITHUB_OUTPUT
+        echo "✅ Coverage: $COVERAGE_PERCENT% (color: $COVERAGE_COLOR)"
+        echo "::endgroup::"
+
+    - name: Generate badge URLs
+      id: badges
+      run: |
+        TEST_COUNT="${{ steps.tests.outputs.test_count }}"
+        COVERAGE_PERCENT="${{ steps.coverage.outputs.coverage_percent }}"
+        COVERAGE_COLOR="${{ steps.coverage.outputs.coverage_color }}"
+        WORKFLOW_URL="${{ steps.tests.outputs.workflow_url }}"
+        
+        echo "::group::Generating badge URLs"
+        echo "Test count: $TEST_COUNT"
+        echo "Coverage: $COVERAGE_PERCENT%"
+        echo "Coverage color: $COVERAGE_COLOR"
+        
+        # Generate test badge URL
+        TEST_BADGE_URL="https://img.shields.io/badge/tests-${TEST_COUNT}%20passing-success"
+        
+        # Generate coverage badge URL
+        COVERAGE_BADGE_URL="https://img.shields.io/badge/coverage-${COVERAGE_PERCENT}%25-${COVERAGE_COLOR}"
+        
+        echo "Test badge URL: $TEST_BADGE_URL"
+        echo "Coverage badge URL: $COVERAGE_BADGE_URL"
+        echo "Workflow URL: $WORKFLOW_URL"
+        
+        echo "test_badge_url=$TEST_BADGE_URL" >> $GITHUB_OUTPUT
+        echo "coverage_badge_url=$COVERAGE_BADGE_URL" >> $GITHUB_OUTPUT
+        echo "test_link=$WORKFLOW_URL" >> $GITHUB_OUTPUT
+        echo "coverage_link=$WORKFLOW_URL" >> $GITHUB_OUTPUT
+        echo "::endgroup::"
+
+    - name: Update README badges
+      working-directory: proj2
+      run: |
+        echo "::group::Updating README badges"
+        
+        if [ ! -f "README.md" ]; then
+          echo "❌ Error: README.md not found in proj2/"
+          exit 1
+        fi
+        
+        node << 'EOF'
+        const fs = require('fs');
+        const path = require('path');
+        
+        const readmePath = 'README.md';
+        
+        if (!fs.existsSync(readmePath)) {
+          console.error('❌ README.md not found at:', path.resolve(readmePath));
+          process.exit(1);
+        }
+        
+        const readme = fs.readFileSync(readmePath, 'utf8');
+        
+        const testBadgeUrl = process.env.TEST_BADGE_URL;
+        const coverageBadgeUrl = process.env.COVERAGE_BADGE_URL;
+        const testLink = process.env.TEST_LINK;
+        const coverageLink = process.env.COVERAGE_LINK;
+        
+        console.log('Current badges:');
+        const testMatch = readme.match(/\[!\[Tests\]\([^)]+\)\]\([^)]+\)/);
+        const coverageMatch = readme.match(/\[!\[Coverage\]\([^)]+\)\]\([^)]+\)/);
+        
+        if (testMatch) console.log('Test badge:', testMatch[0]);
+        if (coverageMatch) console.log('Coverage badge:', coverageMatch[0]);
+        
+        // Update test badge - match the pattern [![Tests](...)](...)
+        let updated = readme.replace(
+          /\[!\[Tests\]\([^)]+\)\]\([^)]+\)/,
+          `[![Tests](${testBadgeUrl})](${testLink})`
+        );
+        
+        // Update coverage badge - match the pattern [![Coverage](...)](...)
+        updated = updated.replace(
+          /\[!\[Coverage\]\([^)]+\)\]\([^)]+\)/,
+          `[![Coverage](${coverageBadgeUrl})](${coverageLink})`
+        );
+        
+        fs.writeFileSync(readmePath, updated);
+        console.log('✅ Updated README badges');
+        console.log('New test badge:', testBadgeUrl);
+        console.log('New coverage badge:', coverageBadgeUrl);
+        EOF
+        echo "::endgroup::"
+
+    - name: Commit and push changes
+      if: github.event_name == 'push'  # Only commit on push events, not PRs
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add proj2/README.md
+        
+        # Only commit if there are changes
+        if git diff --staged --quiet; then
+          echo "ℹ️ No changes to README badges, skipping commit"
+        else
+          echo "::group::Committing badge updates"
+          git commit -m "Update badges: ${{ steps.tests.outputs.test_count }} tests passing, ${{ steps.coverage.outputs.coverage_percent }}% coverage [skip ci]"
+          git push
+          echo "✅ Badges updated and committed"
+          echo "::endgroup::"
+        fi
+    
+    - name: Show badge update (for PRs)
+      if: github.event_name == 'pull_request'
+      run: |
+        echo "## Badge Update Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- **Tests Passing:** ${{ steps.tests.outputs.test_count }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Coverage:** ${{ steps.coverage.outputs.coverage_percent }}%" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "Note: Badge updates are only committed on push events. For PRs, badges will be updated when the PR is merged."
+
