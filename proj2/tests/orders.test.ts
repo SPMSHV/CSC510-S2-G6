@@ -37,11 +37,24 @@ describe('Orders API', () => {
   });
 
   it('updates order status', async () => {
+    // Create vendor for authentication
+    const vendorReg = await request(app).post('/api/auth/register').send({
+      email: `vendor${Date.now()}@test.com`,
+      name: 'Test Vendor',
+      password: 'password123',
+      role: 'VENDOR',
+    });
+    const vendorToken = vendorReg.body.token;
+    const vendorId = vendorReg.body.user.id;
+
     const create = await request(app)
       .post('/api/orders')
-      .send({ userId: 'u', vendorId: 'v', items: [{ name: 'x', quantity: 1, price: 1 }], deliveryLocation: 'loc' });
+      .send({ userId: 'u', vendorId: vendorId, items: [{ name: 'x', quantity: 1, price: 1 }], deliveryLocation: 'loc' });
     const id = create.body.id;
-    const patch = await request(app).patch(`/api/orders/${id}`).send({ status: 'PREPARING' });
+    const patch = await request(app)
+      .patch(`/api/orders/${id}`)
+      .set('Authorization', `Bearer ${vendorToken}`)
+      .send({ status: 'PREPARING' });
     expect(patch.status).toBe(200);
     expect(patch.body.status).toBe('PREPARING');
   });
@@ -122,22 +135,48 @@ describe('Orders API', () => {
     });
 
     it('rejects order with invalid status update', async () => {
+      // Create vendor for authentication
+      const vendorReg = await request(app).post('/api/auth/register').send({
+        email: `vendor${Date.now()}@test.com`,
+        name: 'Test Vendor',
+        password: 'password123',
+        role: 'VENDOR',
+      });
+      const vendorToken = vendorReg.body.token;
+      const vendorId = vendorReg.body.user.id;
+
       const create = await request(app)
         .post('/api/orders')
-        .send({ userId: 'u', vendorId: 'v', items: [{ name: 'x', quantity: 1, price: 1 }], deliveryLocation: 'loc' });
+        .send({ userId: 'u', vendorId: vendorId, items: [{ name: 'x', quantity: 1, price: 1 }], deliveryLocation: 'loc' });
       const id = create.body.id;
 
-      const res = await request(app).patch(`/api/orders/${id}`).send({ status: 'INVALID_STATUS' });
+      const res = await request(app)
+        .patch(`/api/orders/${id}`)
+        .set('Authorization', `Bearer ${vendorToken}`)
+        .send({ status: 'INVALID_STATUS' });
       expect(res.status).toBe(400);
     });
 
     it('rejects status update without status field', async () => {
+      // Create vendor for authentication
+      const vendorReg = await request(app).post('/api/auth/register').send({
+        email: `vendor${Date.now()}@test.com`,
+        name: 'Test Vendor',
+        password: 'password123',
+        role: 'VENDOR',
+      });
+      const vendorToken = vendorReg.body.token;
+      const vendorId = vendorReg.body.user.id;
+
       const create = await request(app)
         .post('/api/orders')
-        .send({ userId: 'u', vendorId: 'v', items: [{ name: 'x', quantity: 1, price: 1 }], deliveryLocation: 'loc' });
+        .send({ userId: 'u', vendorId: vendorId, items: [{ name: 'x', quantity: 1, price: 1 }], deliveryLocation: 'loc' });
       const id = create.body.id;
 
-      const res = await request(app).patch(`/api/orders/${id}`).send({});
+      const res = await request(app)
+        .patch(`/api/orders/${id}`)
+        .set('Authorization', `Bearer ${vendorToken}`)
+        .send({});
       expect(res.status).toBe(400);
     });
 
@@ -147,7 +186,19 @@ describe('Orders API', () => {
     });
 
     it('handles invalid UUID format in patch request', async () => {
-      const res = await request(app).patch('/api/orders/invalid-uuid').send({ status: 'PREPARING' });
+      // Create vendor for authentication
+      const vendorReg = await request(app).post('/api/auth/register').send({
+        email: `vendor${Date.now()}@test.com`,
+        name: 'Test Vendor',
+        password: 'password123',
+        role: 'VENDOR',
+      });
+      const vendorToken = vendorReg.body.token;
+
+      const res = await request(app)
+        .patch('/api/orders/invalid-uuid')
+        .set('Authorization', `Bearer ${vendorToken}`)
+        .send({ status: 'PREPARING' });
       expect(res.status).toBe(404);
     });
 
@@ -187,6 +238,7 @@ describe('Orders API', () => {
   describe('Order Tracking Endpoints', () => {
     let userToken: string;
     let userId: string;
+    let vendorToken: string;
     let vendorId: string;
     let orderId: string;
 
@@ -208,6 +260,7 @@ describe('Orders API', () => {
         password: 'password123',
         role: 'VENDOR',
       });
+      vendorToken = vendorReg.body.token;
       vendorId = vendorReg.body.user.id;
 
       // Create an order for the user
@@ -301,7 +354,10 @@ describe('Orders API', () => {
         const robotId = robotRes.body.id;
 
         // Update order to ASSIGNED with robot
-        await request(app).patch(`/api/orders/${orderId}`).send({ status: 'ASSIGNED' });
+        await request(app)
+          .patch(`/api/orders/${orderId}`)
+          .set('Authorization', `Bearer ${vendorToken}`)
+          .send({ status: 'ASSIGNED' });
 
         // In postgres mode, robot assignment happens automatically when status changes to READY
         // For testing, we'll check if robot info is included when present
@@ -372,7 +428,10 @@ describe('Orders API', () => {
           location: { lat: 35.5, lng: -78.5 },
         });
 
-        await request(app).patch(`/api/orders/${orderId}`).send({ status: 'EN_ROUTE' });
+        await request(app)
+          .patch(`/api/orders/${orderId}`)
+          .set('Authorization', `Bearer ${vendorToken}`)
+          .send({ status: 'EN_ROUTE' });
 
         const res = await request(app).get(`/api/orders/${orderId}/status`).set('Authorization', `Bearer ${userToken}`);
         expect(res.status).toBe(200);
@@ -442,7 +501,10 @@ describe('Orders API', () => {
         });
 
         // Update order status to READY - should trigger robot assignment
-        const updateRes = await request(app).patch(`/api/orders/${testOrderId}`).send({ status: 'READY' });
+        const updateRes = await request(app)
+          .patch(`/api/orders/${testOrderId}`)
+          .set('Authorization', `Bearer ${vendorToken}`)
+          .send({ status: 'READY' });
         expect(updateRes.status).toBe(200);
 
         // Fetch updated order - should have robot_id assigned
@@ -472,7 +534,10 @@ describe('Orders API', () => {
         });
 
         // Update order to READY - should not assign robot if none available
-        const updateRes = await request(app).patch(`/api/orders/${testOrderId}`).send({ status: 'READY' });
+        const updateRes = await request(app)
+          .patch(`/api/orders/${testOrderId}`)
+          .set('Authorization', `Bearer ${vendorToken}`)
+          .send({ status: 'READY' });
         expect(updateRes.status).toBe(200);
         // Order should still be READY but without robot assignment
         const orderCheck = await request(app).get(`/api/orders/${testOrderId}`);
@@ -501,10 +566,16 @@ describe('Orders API', () => {
         const testOrderId = orderRes.body.id;
 
         // Manually assign robot to order (simulate assignment)
-        await request(app).patch(`/api/orders/${testOrderId}`).send({ status: 'ASSIGNED' });
+        await request(app)
+          .patch(`/api/orders/${testOrderId}`)
+          .set('Authorization', `Bearer ${vendorToken}`)
+          .send({ status: 'ASSIGNED' });
 
         // Update order to EN_ROUTE
-        await request(app).patch(`/api/orders/${testOrderId}`).send({ status: 'EN_ROUTE' });
+        await request(app)
+          .patch(`/api/orders/${testOrderId}`)
+          .set('Authorization', `Bearer ${vendorToken}`)
+          .send({ status: 'EN_ROUTE' });
 
         // Check robot status should be EN_ROUTE
         const robotCheck = await request(app).get(`/api/robots/${robotId}`);
@@ -532,7 +603,10 @@ describe('Orders API', () => {
         const testOrderId = orderRes.body.id;
 
         // Update order to DELIVERED
-        await request(app).patch(`/api/orders/${testOrderId}`).send({ status: 'DELIVERED' });
+        await request(app)
+          .patch(`/api/orders/${testOrderId}`)
+          .set('Authorization', `Bearer ${vendorToken}`)
+          .send({ status: 'DELIVERED' });
 
         // Check robot status should be IDLE
         const robotCheck = await request(app).get(`/api/robots/${robotId}`);
@@ -560,7 +634,10 @@ describe('Orders API', () => {
         const testOrderId = orderRes.body.id;
 
         // Update order to CANCELLED
-        await request(app).patch(`/api/orders/${testOrderId}`).send({ status: 'CANCELLED' });
+        await request(app)
+          .patch(`/api/orders/${testOrderId}`)
+          .set('Authorization', `Bearer ${vendorToken}`)
+          .send({ status: 'CANCELLED' });
 
         // Check robot status should be IDLE
         const robotCheck = await request(app).get(`/api/robots/${robotId}`);
@@ -590,7 +667,10 @@ describe('Orders API', () => {
         const testOrderId = orderRes.body.id;
 
         // Update order to DELIVERED
-        await request(app).patch(`/api/orders/${testOrderId}`).send({ status: 'DELIVERED' });
+        await request(app)
+          .patch(`/api/orders/${testOrderId}`)
+          .set('Authorization', `Bearer ${vendorToken}`)
+          .send({ status: 'DELIVERED' });
 
         // Check robot location should be updated to delivery location
         const robotCheck = await request(app).get(`/api/robots/${robotId}`);

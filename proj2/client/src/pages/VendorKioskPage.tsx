@@ -39,8 +39,17 @@ export default function VendorKioskPage() {
         const data = await getVendorOrders();
         setOrders(data);
         setFilteredOrders(data);
+        // Log for debugging
+        if (data.length === 0) {
+          console.log('No orders found for vendor. Make sure you have orders assigned to your vendor account.');
+          console.log('Vendor user ID:', user?.id);
+        } else {
+          console.log(`Loaded ${data.length} orders for vendor`);
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load orders');
+        const errorMessage = err instanceof Error ? err.message : 'Failed to load orders';
+        setError(errorMessage);
+        console.error('Error fetching vendor orders:', err);
       } finally {
         setLoading(false);
       }
@@ -161,9 +170,26 @@ export default function VendorKioskPage() {
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
             <div className="text-6xl mb-4">📦</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No orders found</h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 mb-4">
               {statusFilter === 'ALL' ? 'You don\'t have any orders yet.' : `No orders with status "${statusFilter}"`}
             </p>
+            {statusFilter === 'ALL' && (
+              <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-left max-w-2xl mx-auto">
+                <h4 className="font-semibold text-blue-900 mb-2">💡 To see orders:</h4>
+                <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                  <li>Make sure you're logged in as a vendor account</li>
+                  <li>Orders must be created with your vendor user ID as the vendorId</li>
+                  <li>If using seeded data, log in with one of the seeded vendor accounts:
+                    <ul className="ml-4 mt-1 space-y-0.5 list-disc list-inside text-blue-700">
+                      <li>pizza@campusbot.edu (password: vendor123)</li>
+                      <li>cafe@campusbot.edu (password: vendor123)</li>
+                      <li>burger@campusbot.edu (password: vendor123)</li>
+                    </ul>
+                  </li>
+                  <li>Or create a test order as a student from a restaurant that uses your vendor account</li>
+                </ul>
+              </div>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

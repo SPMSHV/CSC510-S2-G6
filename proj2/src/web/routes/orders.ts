@@ -80,11 +80,23 @@ router.get('/vendor-orders', authenticate, async (req: AuthRequest, res: Respons
     }
 
     if (backend === 'postgres') {
+      // Admin can see all vendor orders, vendors only see their own
+      if (req.user.role === 'ADMIN') {
+        const allOrders = await orderQueries.getAllOrders();
+        return res.json(allOrders);
+      }
       const vendorOrders = await orderQueries.getOrdersByVendorId(req.userId);
       return res.json(vendorOrders);
     }
 
+    // Memory backend: Admin sees all orders, vendors see only their own
+    if (req.user.role === 'ADMIN') {
+      const allOrders = Object.values(orders);
+      return res.json(allOrders);
+    }
     const vendorOrders = Object.values(orders).filter((order) => order.vendorId === req.userId);
+    // Log for debugging
+    console.log(`Vendor orders request - User ID: ${req.userId}, Role: ${req.user.role}, Total orders in system: ${Object.keys(orders).length}, Matching orders: ${vendorOrders.length}`);
     res.json(vendorOrders);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch vendor orders' });

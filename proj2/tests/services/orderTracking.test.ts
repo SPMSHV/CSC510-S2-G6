@@ -3,11 +3,16 @@ import * as orderQueries from '../../src/db/queries/orders';
 import * as robotQueries from '../../src/db/queries/robots';
 
 // Mock the database query modules
-jest.mock('../../src/db/queries/orders');
-jest.mock('../../src/db/queries/robots');
+jest.mock('../../src/db/queries/orders', () => ({
+  getOrderById: jest.fn(),
+}));
+jest.mock('../../src/db/queries/robots', () => ({
+  getRobotById: jest.fn(),
+}));
 
-const mockOrderQueries = orderQueries as jest.Mocked<typeof orderQueries>;
-const mockRobotQueries = robotQueries as jest.Mocked<typeof robotQueries>;
+// Access the mocked functions
+const mockGetOrderById = jest.mocked(orderQueries.getOrderById);
+const mockGetRobotById = jest.mocked(robotQueries.getRobotById);
 
 describe('Order Tracking Service', () => {
   beforeEach(() => {
@@ -67,7 +72,7 @@ describe('Order Tracking Service', () => {
 
   describe('getOrderTrackingInfo', () => {
     it('returns null when order not found', async () => {
-      mockOrderQueries.getOrderById.mockResolvedValue(null);
+      mockGetOrderById.mockResolvedValue(null);
 
       const result = await getOrderTrackingInfo('nonexistent');
       expect(result).toBeNull();
@@ -89,7 +94,7 @@ describe('Order Tracking Service', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockOrderQueries.getOrderById.mockResolvedValue(order);
+      mockGetOrderById.mockResolvedValue(order);
 
       const result = await getOrderTrackingInfo('order-1');
       expect(result).toBeDefined();
@@ -125,8 +130,8 @@ describe('Order Tracking Service', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockOrderQueries.getOrderById.mockResolvedValue(order);
-      mockRobotQueries.getRobotById.mockResolvedValue(robot);
+      mockGetOrderById.mockResolvedValue(order);
+      mockGetRobotById.mockResolvedValue(robot);
 
       const result = await getOrderTrackingInfo('order-1');
       expect(result).toBeDefined();
@@ -161,8 +166,8 @@ describe('Order Tracking Service', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockOrderQueries.getOrderById.mockResolvedValue(order);
-      mockRobotQueries.getRobotById.mockResolvedValue(robot);
+      mockGetOrderById.mockResolvedValue(order);
+      mockGetRobotById.mockResolvedValue(robot);
 
       const result = await getOrderTrackingInfo('order-1');
       expect(result).toBeDefined();
@@ -187,7 +192,7 @@ describe('Order Tracking Service', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockOrderQueries.getOrderById.mockResolvedValue(order);
+      mockGetOrderById.mockResolvedValue(order);
 
       const result = await getOrderTrackingInfo('order-1');
       expect(result?.estimatedDeliveryTime).toBe(10); // From PREPARING status
@@ -209,8 +214,8 @@ describe('Order Tracking Service', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockOrderQueries.getOrderById.mockResolvedValue(order);
-      mockRobotQueries.getRobotById.mockResolvedValue(null);
+      mockGetOrderById.mockResolvedValue(order);
+      mockGetRobotById.mockResolvedValue(null);
 
       const result = await getOrderTrackingInfo('order-1');
       expect(result).toBeDefined();
@@ -243,8 +248,8 @@ describe('Order Tracking Service', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockOrderQueries.getOrderById.mockResolvedValue(order);
-      mockRobotQueries.getRobotById.mockResolvedValue(robot);
+      mockGetOrderById.mockResolvedValue(order);
+      mockGetRobotById.mockResolvedValue(robot);
 
       const result = await getOrderTrackingInfo('order-1');
       expect(result).toBeDefined();
@@ -268,7 +273,7 @@ describe('Order Tracking Service', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockOrderQueries.getOrderById.mockResolvedValue(order);
+      mockGetOrderById.mockResolvedValue(order);
 
       const result = await getOrderTrackingInfo('order-1');
       expect(result).toBeDefined();
