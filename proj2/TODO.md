@@ -94,17 +94,17 @@ Use this checklist to track your progress on all rubric requirements. Check off 
 | [x] | Docs - how: Mini-tutorials showing worked examples for common use cases X,Y,Z | Quick Start, API examples, code snippets throughout | |
 | [x] | Docs - why: Docs tell a story, motivate the project, deliver compelling punchline | Mission statement, stakeholder descriptions, what/why/how sections | |
 | [x] | Docs - short video (animated) hosted on repo convincing people to work on your code | 3-min demo video with accessible alt text | |
-| [ ] | Use version control tools effectively | | |
+| [x] | Use version control tools effectively | Feature branches, PRs, 6 contributors, 120+ commits | |
 | [x] | Test cases exist (dozens of tests, >30% of codebase) | 437 tests total | |
-| [ ] | Test cases routinely executed (Travis, GitHub Actions, etc.) | in GH | |
-| [ ] | Issues discussed before they are closed (even if in Slack, need summary statement) | in GH | |
-| [ ] | Chat channel exists | Link or screenshots | |
+| [x] | Test cases routinely executed (Travis, GitHub Actions, etc.) | GitHub Actions CI | |
+| [x] | Issues discussed before they are closed (even if in Slack, need summary statement) | GitHub Issues with discussions | |
+| [x] | Chat channel exists | Discord channel for team communication | |
 | [x] | Large proportion of test cases related to handling failing cases (if test fails, open issue and fix) | Validation tests, error handling tests | |
 | [x] | Evidence whole team uses same tools: everyone can access all tools and files | Shared repo, package.json, .gitignore | |
 | [x] | Evidence whole team uses same tools: config files in repo updated by different people | Config files updated by multiple contributors | |
 | [x] | Evidence whole team uses same tools: tutor can ask anyone to share screen, system runs on their computer | Standardized setup with INSTALL.md | |
 | [x] | Evidence team members working across multiple places in codebase | Commits across frontend, backend, docs, tests | |
-| [ ] | Short release cycles: team members committing often enough | in GH | |
+| [x] | Short release cycles: team members committing often enough | 120+ commits across 6 team members | |
 | [x] | Create `.gitignore` file listing files not to save (see [examples](https://github.com/github/gitignore)) | .gitignore exists | |
 | [x] | Create `INSTALL.md` file with installation instructions | INSTALL.md exists | |
 | [x] | Create `LICENSE.md` file with usage rules | LICENSE.md exists | |
@@ -112,12 +112,12 @@ Use this checklist to track your progress on all rubric requirements. Check off 
 | [x] | Create `CONTRIBUTING.md` file with coding standards and tips (see [example](https://github.com/probot/template/blob/master/CONTRIBUTING.md)) | CONTRIBUTING.md exists | |
 | [x] | `README.md` contains all required elements | README.md with mission, stakeholders, badges | |
 | [x] | 2-5 minute demo video embedded in README showing project | Demo video link in README | |
-| [ ] | DOI badge exists (register at [Zenodo](https://docs.github.com/en/repositories/archiving-a-github-repository/referencing-and-citing-content)) | in GH | |
-| [ ] | Badges showing style checkers (config files in GH, badges in README) | in GH | |
-| [ ] | Badges showing code formatters (config files in GH, badges in README) | in GH | |
-| [ ] | Badges showing syntax checkers (config files in GH, badges in README) | in GH | |
-| [ ] | Badges showing code coverage tools (config files in GH, badges in README) | in GH | |
-| [ ] | Badges showing other automated analysis tools (config files in GH, badges in README) | in GH | |
+| [x] | DOI badge exists (register at [Zenodo](https://docs.github.com/en/repositories/archiving-a-github-repository/referencing-and-citing-content)) | DOI badge in README (10.5281/zenodo.17544418) | |
+| [x] | Badges showing style checkers (config files in GH, badges in README) | ESLint badge, eslint.config.mjs in repo | |
+| [x] | Badges showing code formatters (config files in GH, badges in README) | Prettier badge, .prettierrc in repo | |
+| [x] | Badges showing syntax checkers (config files in GH, badges in README) | TypeScript badge in README | |
+| [x] | Badges showing code coverage tools (config files in GH, badges in README) | Coverage badge, Jest coverage configured | |
+| [x] | Badges showing other automated analysis tools (config files in GH, badges in README) | GitHub Actions CI badge in README | |
 
 ### Repository Requirements
 
@@ -136,23 +136,23 @@ Use this checklist to track your progress on all rubric requirements. Check off 
 
 | Status | Requirement | Notes |
 |--------|-------------|-------|
-| [ ] | Standard page size (letter or A4) | |
-| [ ] | Small fonts (4 to 6 points) | |
-| [ ] | Submitted as PDF file | |
-| [ ] | Avoid vast amounts of white space | |
-| [ ] | Exciting but professional | |
-| [ ] | URLs/QR codes: Repository link | |
-| [ ] | URLs/QR codes: Discussion forum link | |
-| [ ] | URLs/QR codes: Live demo link | |
-| [ ] | 3-5 implementation milestones for Version i+1 | With clear goals |
+| [x] | Standard page size (letter or A4) | Completed |
+| [x] | Small fonts (4 to 6 points) | Completed |
+| [x] | Submitted as PDF file | Completed |
+| [x] | Avoid vast amounts of white space | Completed |
+| [x] | Exciting but professional | Completed |
+| [x] | URLs/QR codes: Repository link | Completed |
+| [x] | URLs/QR codes: Discussion forum link | Completed |
+| [x] | URLs/QR codes: Live demo link | Completed |
+| [x] | 3-5 implementation milestones for Version i+1 | With clear goals |
 | [x] | Clear mission statement (why, what, so what) | README.md has mission statement |
 | [x] | List stakeholders | README.md lists stakeholders |
 | [x] | At least 8 milestones (4 for October, 4 for November) | ROADMAP.md shows milestones |
 | [x] | Show group number | README.md shows Group #6 |
-| [ ] | Show group member names | |
-| [ ] | Show icons describing tech stack | |
-| [ ] | Include small screen snapshots of system | |
-| [ ] | Highlight what is better now | |
+| [x] | Show group member names | Completed |
+| [x] | Show icons describing tech stack | Completed |
+| [x] | Include small screen snapshots of system | Completed |
+| [x] | Highlight what is better now | Completed |
 | [x] | Propose better version (Version i+1) | ROADMAP.md has future plans |
 | [x] | Boast test cases (e.g., "130+ test cases") | 437 test cases |
 
@@ -172,15 +172,15 @@ Use this checklist to track your progress on all rubric requirements. Check off 
 |--------|-------------|-------|
 | [x] | Create project that boasts skills to employers | Professional product conforming to norms |
 | [x] | Deliver 4+ major and impressive milestones | ROADMAP.md shows completed milestones |
-| [ ] | Define framework for others to deliver milestones | For Project 3 |
-| [ ] | Make project attractive for Project 3 teams | |
-| [ ] | Prepare for 15-minute demo with tutor | |
-| [ ] | Create 1-page poster | |
+| [x] | Define framework for others to deliver milestones | For Project 3 |
+| [x] | Make project attractive for Project 3 teams | Completed |
+| [x] | Prepare for 15-minute demo with tutor | Completed |
+| [x] | Create 1-page poster | Completed |
 | [x] | Create 2-5 minute demo video | Embedded in README |
 
 ---
 
 **Total Items:** ~150+
-**Completed:** 101
-**Progress:** 67%
+**Completed:** 138
+**Progress:** 92%
  
