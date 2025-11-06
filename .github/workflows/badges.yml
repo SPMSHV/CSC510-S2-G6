@@ -175,18 +175,99 @@ jobs:
                   echo "✅ Coverage: $COVERAGE_PERCENT% (color: $COVERAGE_COLOR)"
                   echo "::endgroup::"
 
+            - name: Check ESLint (Style Checker)
+              id: eslint
+              working-directory: proj2
+              continue-on-error: true
+              run: |
+                  echo "::group::Running ESLint"
+                  ESLINT_STATUS="passing"
+                  ESLINT_COLOR="success"
+                  
+                  if npm run lint 2>&1 | tee eslint-output.txt; then
+                    echo "✅ ESLint passed"
+                    ESLINT_STATUS="passing"
+                    ESLINT_COLOR="success"
+                  else
+                    echo "❌ ESLint failed"
+                    ESLINT_STATUS="failing"
+                    ESLINT_COLOR="critical"
+                  fi
+                  
+                  echo "eslint_status=$ESLINT_STATUS" >> $GITHUB_OUTPUT
+                  echo "eslint_color=$ESLINT_COLOR" >> $GITHUB_OUTPUT
+                  echo "::endgroup::"
+
+            - name: Check Prettier (Code Formatter)
+              id: prettier
+              working-directory: proj2
+              continue-on-error: true
+              run: |
+                  echo "::group::Running Prettier check"
+                  PRETTIER_STATUS="formatted"
+                  PRETTIER_COLOR="success"
+                  
+                  if npm run format:check 2>&1 | tee prettier-output.txt; then
+                    echo "✅ Prettier check passed"
+                    PRETTIER_STATUS="formatted"
+                    PRETTIER_COLOR="success"
+                  else
+                    echo "❌ Prettier check failed"
+                    PRETTIER_STATUS="not%20formatted"
+                    PRETTIER_COLOR="critical"
+                  fi
+                  
+                  echo "prettier_status=$PRETTIER_STATUS" >> $GITHUB_OUTPUT
+                  echo "prettier_color=$PRETTIER_COLOR" >> $GITHUB_OUTPUT
+                  echo "::endgroup::"
+
+            - name: Check TypeScript (Syntax Checker)
+              id: typescript
+              working-directory: proj2
+              continue-on-error: true
+              run: |
+                  echo "::group::Running TypeScript check"
+                  TYPESCRIPT_STATUS="passing"
+                  TYPESCRIPT_COLOR="success"
+                  
+                  if npm run build 2>&1 | tee typescript-output.txt; then
+                    echo "✅ TypeScript check passed"
+                    TYPESCRIPT_STATUS="passing"
+                    TYPESCRIPT_COLOR="success"
+                  else
+                    echo "❌ TypeScript check failed"
+                    TYPESCRIPT_STATUS="failing"
+                    TYPESCRIPT_COLOR="critical"
+                  fi
+                  
+                  echo "typescript_status=$TYPESCRIPT_STATUS" >> $GITHUB_OUTPUT
+                  echo "typescript_color=$TYPESCRIPT_COLOR" >> $GITHUB_OUTPUT
+                  echo "::endgroup::"
+
             - name: Generate badge URLs
               id: badges
               run: |
                   TEST_COUNT="${{ steps.tests.outputs.test_count }}"
                   COVERAGE_PERCENT="${{ steps.coverage.outputs.coverage_percent }}"
                   COVERAGE_COLOR="${{ steps.coverage.outputs.coverage_color }}"
+                  ESLINT_STATUS="${{ steps.eslint.outputs.eslint_status }}"
+                  ESLINT_COLOR="${{ steps.eslint.outputs.eslint_color }}"
+                  PRETTIER_STATUS="${{ steps.prettier.outputs.prettier_status }}"
+                  PRETTIER_COLOR="${{ steps.prettier.outputs.prettier_color }}"
+                  TYPESCRIPT_STATUS="${{ steps.typescript.outputs.typescript_status }}"
+                  TYPESCRIPT_COLOR="${{ steps.typescript.outputs.typescript_color }}"
                   WORKFLOW_URL="${{ steps.tests.outputs.workflow_url }}"
 
                   echo "::group::Generating badge URLs"
                   echo "Test count: $TEST_COUNT"
                   echo "Coverage: $COVERAGE_PERCENT%"
                   echo "Coverage color: $COVERAGE_COLOR"
+                  echo "ESLint status: $ESLINT_STATUS"
+                  echo "ESLint color: $ESLINT_COLOR"
+                  echo "Prettier status: $PRETTIER_STATUS"
+                  echo "Prettier color: $PRETTIER_COLOR"
+                  echo "TypeScript status: $TYPESCRIPT_STATUS"
+                  echo "TypeScript color: $TYPESCRIPT_COLOR"
 
                   # Generate test badge URL
                   TEST_BADGE_URL="https://img.shields.io/badge/tests-${TEST_COUNT}%20passing-success"
@@ -194,14 +275,32 @@ jobs:
                   # Generate coverage badge URL
                   COVERAGE_BADGE_URL="https://img.shields.io/badge/coverage-${COVERAGE_PERCENT}%25-${COVERAGE_COLOR}"
 
+                  # Generate ESLint badge URL (Style Checker)
+                  ESLINT_BADGE_URL="https://img.shields.io/badge/ESLint-${ESLINT_STATUS}-${ESLINT_COLOR}"
+
+                  # Generate Prettier badge URL (Code Formatter)
+                  PRETTIER_BADGE_URL="https://img.shields.io/badge/Prettier-${PRETTIER_STATUS}-${PRETTIER_COLOR}"
+
+                  # Generate TypeScript badge URL (Syntax Checker)
+                  TYPESCRIPT_BADGE_URL="https://img.shields.io/badge/TypeScript-${TYPESCRIPT_STATUS}-${TYPESCRIPT_COLOR}"
+
                   echo "Test badge URL: $TEST_BADGE_URL"
                   echo "Coverage badge URL: $COVERAGE_BADGE_URL"
+                  echo "ESLint badge URL: $ESLINT_BADGE_URL"
+                  echo "Prettier badge URL: $PRETTIER_BADGE_URL"
+                  echo "TypeScript badge URL: $TYPESCRIPT_BADGE_URL"
                   echo "Workflow URL: $WORKFLOW_URL"
 
                   echo "test_badge_url=$TEST_BADGE_URL" >> $GITHUB_OUTPUT
                   echo "coverage_badge_url=$COVERAGE_BADGE_URL" >> $GITHUB_OUTPUT
+                  echo "eslint_badge_url=$ESLINT_BADGE_URL" >> $GITHUB_OUTPUT
+                  echo "prettier_badge_url=$PRETTIER_BADGE_URL" >> $GITHUB_OUTPUT
+                  echo "typescript_badge_url=$TYPESCRIPT_BADGE_URL" >> $GITHUB_OUTPUT
                   echo "test_link=$WORKFLOW_URL" >> $GITHUB_OUTPUT
                   echo "coverage_link=$WORKFLOW_URL" >> $GITHUB_OUTPUT
+                  echo "eslint_link=$WORKFLOW_URL" >> $GITHUB_OUTPUT
+                  echo "prettier_link=$WORKFLOW_URL" >> $GITHUB_OUTPUT
+                  echo "typescript_link=$WORKFLOW_URL" >> $GITHUB_OUTPUT
                   echo "::endgroup::"
 
             - name: Update README badges
@@ -209,8 +308,14 @@ jobs:
               env:
                   TEST_BADGE_URL: ${{ steps.badges.outputs.test_badge_url }}
                   COVERAGE_BADGE_URL: ${{ steps.badges.outputs.coverage_badge_url }}
+                  ESLINT_BADGE_URL: ${{ steps.badges.outputs.eslint_badge_url }}
+                  PRETTIER_BADGE_URL: ${{ steps.badges.outputs.prettier_badge_url }}
+                  TYPESCRIPT_BADGE_URL: ${{ steps.badges.outputs.typescript_badge_url }}
                   TEST_LINK: ${{ steps.badges.outputs.test_link }}
                   COVERAGE_LINK: ${{ steps.badges.outputs.coverage_link }}
+                  ESLINT_LINK: ${{ steps.badges.outputs.eslint_link }}
+                  PRETTIER_LINK: ${{ steps.badges.outputs.prettier_link }}
+                  TYPESCRIPT_LINK: ${{ steps.badges.outputs.typescript_link }}
 
               run: |
                   echo "::group::Updating README badges"
@@ -235,15 +340,27 @@ jobs:
 
                   const testBadgeUrl = process.env.TEST_BADGE_URL;
                   const coverageBadgeUrl = process.env.COVERAGE_BADGE_URL;
+                  const eslintBadgeUrl = process.env.ESLINT_BADGE_URL;
+                  const prettierBadgeUrl = process.env.PRETTIER_BADGE_URL;
+                  const typescriptBadgeUrl = process.env.TYPESCRIPT_BADGE_URL;
                   const testLink = process.env.TEST_LINK;
                   const coverageLink = process.env.COVERAGE_LINK;
+                  const eslintLink = process.env.ESLINT_LINK;
+                  const prettierLink = process.env.PRETTIER_LINK;
+                  const typescriptLink = process.env.TYPESCRIPT_LINK;
 
                   console.log('Current badges:');
                   const testMatch = readme.match(/\[!\[Tests\]\([^)]+\)\]\([^)]+\)/);
                   const coverageMatch = readme.match(/\[!\[Coverage\]\([^)]+\)\]\([^)]+\)/);
+                  const eslintMatch = readme.match(/\[!\[ESLint\]\([^)]+\)\]\([^)]+\)/);
+                  const prettierMatch = readme.match(/\[!\[Prettier\]\([^)]+\)\]\([^)]+\)/);
+                  const typescriptMatch = readme.match(/\[!\[TypeScript\]\([^)]+\)\]\([^)]+\)/);
 
                   if (testMatch) console.log('Test badge:', testMatch[0]);
                   if (coverageMatch) console.log('Coverage badge:', coverageMatch[0]);
+                  if (eslintMatch) console.log('ESLint badge:', eslintMatch[0]);
+                  if (prettierMatch) console.log('Prettier badge:', prettierMatch[0]);
+                  if (typescriptMatch) console.log('TypeScript badge:', typescriptMatch[0]);
 
                   // Update test badge - match the pattern [![Tests](...)](...)
                   let updated = readme.replace(
@@ -257,10 +374,31 @@ jobs:
                     `[![Coverage](${coverageBadgeUrl})](${coverageLink})`
                   );
 
+                  // Update ESLint badge (Style Checker) - match the pattern [![ESLint](...)](...)
+                  updated = updated.replace(
+                    /\[!\[ESLint\]\([^)]+\)\]\([^)]+\)/,
+                    `[![ESLint](${eslintBadgeUrl})](${eslintLink})`
+                  );
+
+                  // Update Prettier badge (Code Formatter) - match the pattern [![Prettier](...)](...)
+                  updated = updated.replace(
+                    /\[!\[Prettier\]\([^)]+\)\]\([^)]+\)/,
+                    `[![Prettier](${prettierBadgeUrl})](${prettierLink})`
+                  );
+
+                  // Update TypeScript badge (Syntax Checker) - match the pattern [![TypeScript](...)](...)
+                  updated = updated.replace(
+                    /\[!\[TypeScript\]\([^)]+\)\]\([^)]+\)/,
+                    `[![TypeScript](${typescriptBadgeUrl})](${typescriptLink})`
+                  );
+
                   fs.writeFileSync(readmePath, updated);
                   console.log('✅ Updated README badges');
                   console.log('New test badge:', testBadgeUrl);
                   console.log('New coverage badge:', coverageBadgeUrl);
+                  console.log('New ESLint badge:', eslintBadgeUrl);
+                  console.log('New Prettier badge:', prettierBadgeUrl);
+                  console.log('New TypeScript badge:', typescriptBadgeUrl);
                   EOF
                   echo "::endgroup::"
 
@@ -277,7 +415,7 @@ jobs:
                     echo "ℹ️ No changes to README badges, skipping commit"
                   else
                     echo "::group::Committing badge updates"
-                    git commit -m "Update badges: ${{ steps.tests.outputs.test_count }} tests passing, ${{ steps.coverage.outputs.coverage_percent }}% coverage [skip ci]"
+                    git commit -m "Update badges: ${{ steps.tests.outputs.test_count }} tests passing, ${{ steps.coverage.outputs.coverage_percent }}% coverage, ESLint: ${{ steps.eslint.outputs.eslint_status }}, Prettier: ${{ steps.prettier.outputs.prettier_status }}, TypeScript: ${{ steps.typescript.outputs.typescript_status }} [skip ci]"
                     git push
                     echo "✅ Badges updated and committed"
                     echo "::endgroup::"
@@ -289,5 +427,8 @@ jobs:
                   echo "## Badge Update Summary" >> $GITHUB_STEP_SUMMARY
                   echo "- **Tests Passing:** ${{ steps.tests.outputs.test_count }}" >> $GITHUB_STEP_SUMMARY
                   echo "- **Coverage:** ${{ steps.coverage.outputs.coverage_percent }}%" >> $GITHUB_STEP_SUMMARY
+                  echo "- **ESLint (Style Checker):** ${{ steps.eslint.outputs.eslint_status }}" >> $GITHUB_STEP_SUMMARY
+                  echo "- **Prettier (Code Formatter):** ${{ steps.prettier.outputs.prettier_status }}" >> $GITHUB_STEP_SUMMARY
+                  echo "- **TypeScript (Syntax Checker):** ${{ steps.typescript.outputs.typescript_status }}" >> $GITHUB_STEP_SUMMARY
                   echo "" >> $GITHUB_STEP_SUMMARY
                   echo "Note: Badge updates are only committed on push events. For PRs, badges will be updated when the PR is merged."

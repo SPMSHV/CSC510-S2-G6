@@ -1,13 +1,13 @@
 # 🤖 CampusBot — Autonomous Campus Food Delivery
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/SPMSHV/CSC510-S2-G6/ci.yml?branch=main&label=Build)](https://github.com/SPMSHV/CSC510-S2-G6/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-419%20passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19127474250)
-[![Coverage](https://img.shields.io/badge/coverage-76%25-green)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19127474250)
+[![Tests](https://img.shields.io/badge/tests-419%20passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19128849445)
+[![Coverage](https://img.shields.io/badge/coverage-76%25-green)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19128849445)
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/SPMSHV/CSC510-S2-G6/blob/main/proj2/LICENSE.md)
 [![Node Version](https://img.shields.io/badge/node-18.x-green)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
-[![Code Style](https://img.shields.io/badge/code%20style-prettier-ff69b4)](https://github.com/SPMSHV/CSC510-S2-G6/blob/main/proj2/.prettierrc)
-[![ESLint](https://img.shields.io/badge/ESLint-enabled-4B32C3)](https://github.com/SPMSHV/CSC510-S2-G6/blob/main/proj2/eslint.config.js)
+[![TypeScript](https://img.shields.io/badge/TypeScript-passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19128849445)
+[![ESLint](https://img.shields.io/badge/ESLint-passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19128849445)
+[![Prettier](https://img.shields.io/badge/Prettier-formatted-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19128849445)
 
 **Tagline:** Robots on campus. Meals on time. Operations you can trust.
 
