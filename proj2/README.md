@@ -1,8 +1,8 @@
 # 🤖 CampusBot — Autonomous Campus Food Delivery
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/SPMSHV/CSC510-S2-G6/ci.yml?branch=main&label=Build)](https://github.com/SPMSHV/CSC510-S2-G6/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-819%20passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/tree/main/proj2/tests)
-[![Coverage](https://img.shields.io/badge/coverage-90%2B%25-brightgreen)](https://github.com/SPMSHV/CSC510-S2-G6/tree/main/proj2/tests)
+[![Tests](https://img.shields.io/badge/tests-695%20passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19127351044)
+[![Coverage](https://img.shields.io/badge/coverage-76%25-green)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19127351044)
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/SPMSHV/CSC510-S2-G6/blob/main/proj2/LICENSE.md)
 [![Node Version](https://img.shields.io/badge/node-18.x-green)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
