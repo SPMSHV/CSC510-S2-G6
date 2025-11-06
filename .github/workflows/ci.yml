@@ -21,11 +21,11 @@ jobs:
       with:
         node-version: '18'
         cache: 'npm'
-        cache-dependency-path: 'proj2/package-lock.json'
+        cache-dependency-path: 'proj2/package.json'
 
     - name: Install dependencies
       working-directory: proj2
-      run: npm ci
+      run: npm install --no-fund --no-audit
 
     - name: Run linter
       working-directory: proj2
