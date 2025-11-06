@@ -68,7 +68,7 @@ Online and on-campus food options are fragmented, slow, and costly to manage whe
 - **OpenAPI Specification** - Complete API documentation with Swagger UI
 - **Database Schema** - PostgreSQL-ready; in-memory default for development
 - **Sample Data** - Seed script for quick demos and testing
-- **Comprehensive Testing** - 375+ test cases with full coverage
+- **Comprehensive Testing** - 437 test cases across 23 test suites
 - **CI/CD Pipeline** - GitHub Actions for automated testing and deployment
 - **Docker Support** - Containerization with Docker and Docker Compose
 
@@ -120,10 +120,10 @@ Online and on-campus food options are fragmented, slow, and costly to manage whe
 - **License Headers** - Copyright and license headers in source files
 
 ### Quality & Testing
-- ✅ **419 Test Cases** - Comprehensive coverage including nominal and off-nominal scenarios
-- ✅ **22 Test Suites** - All passing with 100% success rate
+- ✅ **437 Test Cases** - Comprehensive coverage including nominal and off-nominal scenarios
+- ✅ **23 Test Suites** - All passing with 100% success rate
 - ✅ **Telemetry Tests** - Full test coverage for new telemetry features
-- ✅ **74% Code Coverage** - Statements, branches, functions, and lines
+- ✅ **73% Code Coverage** - Statements, branches, functions, and lines
 - ✅ **Automated CI** - GitHub Actions for lint/build/test
 - ✅ **Type Safety** - Full TypeScript implementation
 - ✅ **Code Quality Tools** - ESLint, Prettier
@@ -254,6 +254,7 @@ proj2/
 │   │   │   └── auth.ts              # JWT authentication middleware
 │   │   └── routes/                   # API route handlers
 │   │       ├── auth.ts              # Authentication routes
+│   │       ├── export.ts            # Data export/import routes
 │   │       ├── orders.ts            # Order routes (includes vendor endpoints)
 │   │       ├── restaurants.ts       # Restaurant routes
 │   │       ├── robots.ts           # Robot routes
@@ -296,8 +297,9 @@ proj2/
 │   └── package.json
 ├── scripts/                          # Utility scripts
 │   ├── dev-with-seed.ts             # Development server with seeding
+│   ├── generate-dependency-docs.ts  # Generate dependency documentation
 │   └── telemetry-sim.ts             # 🆕 Milestone 3: Telemetry generator
-├── tests/                            # Test suite (419+ tests)
+├── tests/                            # Test suite (437 tests, 23 suites)
 │   ├── db/                          # Database tests
 │   │   ├── client.test.ts
 │   │   └── queries/                 # Query function tests
@@ -308,6 +310,7 @@ proj2/
 │   │   └── robotAssignment.test.ts
 │   ├── auth.test.ts                 # Authentication tests
 │   ├── health.test.ts               # Health check tests
+│   ├── export.test.ts              # Data export/import tests
 │   ├── orders.test.ts               # Order API tests
 │   ├── orders.validation.test.ts   # Order validation tests
 │   ├── orderTracking.test.ts        # Order tracking tests
@@ -320,9 +323,12 @@ proj2/
 │   ├── vendorOrders.test.ts        # 🆕 Milestone 4: Vendor order tests
 │   └── vendorService.test.ts       # 🆕 Milestone 4: Vendor service tests
 ├── docs/                             # Documentation
+│   ├── ACCESSIBILITY.md             # Accessibility standards and testing
 │   ├── API_REFERENCE.md             # Comprehensive API reference
+│   ├── BACKEND.md                   # Backend API guide with examples
 │   ├── DEMO_GUIDE.md                # End-to-end demo guide
 │   ├── DEPENDENCIES.md              # Dependency licenses
+│   ├── FRONTEND.md                  # Frontend architecture and UI patterns
 │   ├── openapi.yaml                 # OpenAPI 3.0 specification
 │   ├── RELEASES.md                  # Release management guide
 │   ├── ROADMAP.md                   # Project roadmap
@@ -334,11 +340,16 @@ proj2/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml                   # GitHub Actions CI/CD
+├── client/scripts/                   # Client utility scripts
+│   └── check-and-seed.js            # Check and seed database script
 ├── Dockerfile                        # Docker container definition
 ├── docker-compose.yml                # Docker Compose configuration
 ├── package.json                      # Backend dependencies
+├── Section_2_Group_6.pdf            # Project documentation PDF
+├── SECURITY.md                       # Security policy
 ├── tsconfig.json                     # TypeScript configuration
-└── tsconfig.build.json               # Build-specific TypeScript config
+├── tsconfig.build.json               # Build-specific TypeScript config
+└── video_demo.mp4                    # Demo video file
 ```
 
 ---
@@ -355,7 +366,7 @@ proj2/
 - ✅ OpenAPI 3.0 specification with Swagger UI documentation
 - ✅ Dual database support: PostgreSQL (production) and in-memory (development)
 - ✅ Database migrations and seed scripts for sample data
-- ✅ Comprehensive test suite with 375+ test cases
+- ✅ Comprehensive test suite with 437 test cases across 23 test suites
 - ✅ CI/CD pipeline with GitHub Actions
 - ✅ Docker containerization support
 - ✅ Project governance: CONTRIBUTING.md, CODE_OF_CONDUCT.md, LICENSE.md
@@ -403,7 +414,7 @@ proj2/
 - ✅ Emergency stop command functionality for fleet control
 - ✅ Live connection status indicator for telemetry stream
 - ✅ Telemetry API endpoints: `/api/telemetry/snapshot` and `/api/telemetry/stream`
-- ✅ Comprehensive telemetry test suite (378 total tests)
+- ✅ Comprehensive telemetry test suite (437 total tests)
 - ✅ Real-time position updates using simulated movement algorithms
 
 **Dashboard Features**:
@@ -432,7 +443,7 @@ proj2/
 - ✅ Real-time order updates with polling mechanism
 - ✅ Coordinate-based robot assignment using Haversine distance formula
 - ✅ End-to-end order lifecycle: Student → Vendor → Robot → Delivery
-- ✅ Comprehensive test suite: 40+ tests for vendor functionality
+- ✅ Comprehensive test suite: 437 total tests including vendor functionality
 - ✅ Delivery coordinate input in checkout for accurate robot assignment
 
 **Order Lifecycle**:

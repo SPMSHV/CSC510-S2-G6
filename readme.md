@@ -97,41 +97,47 @@ For detailed installation instructions, see [proj2/INSTALL.md](proj2/INSTALL.md)
 
 ## ✨ Project Milestones
 
-### ✅ Milestone 1: Core API Foundation (Completed)
+### ✅ Milestone 1: Core API Foundation (Completed Oct 2025)
 - RESTful API with Express.js and TypeScript
 - CRUD operations for Users, Robots, Orders, and Restaurants
 - OpenAPI 3.0 specification with Swagger UI
 - PostgreSQL database schema with in-memory fallback
-- Comprehensive test suite (375+ tests)
+- Comprehensive test suite (437 tests, 23 suites)
 - Docker containerization
 - CI/CD pipeline with GitHub Actions
 
-### ✅ Milestone 2: Student Mobile UI (Completed)
+### ✅ Milestone 2: Student Mobile UI (Completed Oct 2025)
 - Home page with restaurant browsing and search
 - Restaurant detail pages with menu items
-- Shopping cart and checkout flow
-- Live order tracking with progress bar
-- My Orders page for order history
+- Shopping cart and checkout flow with coordinate input
+- Live order tracking with progress bar and real-time polling
+- My Orders page for order history with auto-refresh
 - User authentication (registration/login)
 - JWT-based authentication with role-based access control
 - Responsive mobile-first UI with Tailwind CSS
+- Password security with bcrypt hashing
 
-### ✅ Milestone 3: Simulated Robot Telemetry & Fleet Dashboard (Completed)
+### ✅ Milestone 3: Simulated Robot Telemetry & Fleet Dashboard (Completed Oct 2025)
 - Telemetry generator for 5 simulated robots
 - Real-time fleet dashboard with live updates
 - Server-Sent Events (SSE) for telemetry streaming
 - Robot status tracking (battery, position, speed, distance)
 - Emergency stop command functionality
 - Visual status indicators and connection monitoring
+- Telemetry API endpoints for snapshot and streaming
+- Robot health monitoring and diagnostics
 
-### ✅ Milestone 4: Vendor Kiosk + Order Handoff Flow (Completed)
-- Vendor kiosk UI for order management
+### ✅ Milestone 4: Vendor Kiosk + Order Handoff Flow (Completed Nov 2025)
+- Vendor kiosk UI for order management (`/vendor/kiosk`)
 - Order status transitions (CREATED → PREPARING → READY)
 - Automatic robot assignment when orders become READY
+- Order automation service: automatic transitions (ASSIGNED → EN_ROUTE → DELIVERED)
+- Coordinate-based robot assignment using Haversine distance formula
 - End-to-end order lifecycle: CREATED → PREPARING → READY → ASSIGNED → EN_ROUTE → DELIVERED
-- Vendor authorization and access control
-- Real-time order updates with polling
-- Comprehensive test suite (40+ vendor-specific tests)
+- Vendor authorization and role-based access control
+- Real-time order updates with polling mechanism
+- Order filtering and order details modal
+- Comprehensive test suite (437 total tests including vendor functionality)
 
 ---
 
@@ -152,11 +158,12 @@ For detailed installation instructions, see [proj2/INSTALL.md](proj2/INSTALL.md)
 
 ## 📊 Project Statistics
 
-- **Test Coverage**: 419+ test cases, all passing
-- **Test Suites**: 22 test suites
+- **Test Coverage**: 437 test cases, all passing
+- **Test Suites**: 23 test suites
+- **Code Coverage**: 73%
 - **Code Quality**: TypeScript, ESLint, Prettier configured
 - **API Endpoints**: 20+ RESTful endpoints
-- **Frontend Pages**: 6 main pages (Home, Restaurant Detail, Checkout, Order Tracking, My Orders, Fleet Dashboard, Vendor Kiosk)
+- **Frontend Pages**: 7 main pages (Home, Restaurant Detail, Checkout, Order Tracking, My Orders, Fleet Dashboard, Vendor Kiosk)
 
 ---
 
