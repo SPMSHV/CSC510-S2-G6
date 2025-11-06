@@ -1,4 +1,4 @@
-import { spawn, ChildProcess } from 'child_process';
+import { spawn } from 'child_process';
 import dotenv from 'dotenv';
 import http from 'http';
 import path from 'path';
@@ -27,12 +27,12 @@ function checkServerReady(): Promise<boolean> {
 }
 
 async function waitForServer(): Promise<void> {
-  // eslint-disable-next-line no-console
+   
   console.log('⏳ Waiting for backend server to start...');
   for (let i = 0; i < MAX_WAIT_ATTEMPTS; i++) {
     const ready = await checkServerReady();
     if (ready) {
-      // eslint-disable-next-line no-console
+       
       console.log('✓ Backend server is ready\n');
       return;
     }
@@ -42,7 +42,7 @@ async function waitForServer(): Promise<void> {
 }
 
 async function runSeed(): Promise<void> {
-  // eslint-disable-next-line no-console
+   
   console.log('🌱 Running seed script...');
   const seedProcess = spawn('npm', ['run', 'seed'], {
     stdio: 'inherit',
@@ -75,7 +75,7 @@ async function main() {
 
     // Optionally start frontend
     if (startFrontend) {
-      // eslint-disable-next-line no-console
+       
       console.log('\n🚀 Starting frontend development server...\n');
       const frontendProcess = spawn('npm', ['run', 'dev'], {
         stdio: 'inherit',
@@ -87,15 +87,15 @@ async function main() {
         process.exit(code || 0);
       });
     } else {
-      // eslint-disable-next-line no-console
+       
       console.log('\n✅ Seed complete! Backend is ready with sample data.');
-      // eslint-disable-next-line no-console
+       
       console.log('💡 To start the frontend, run: cd client && npm run dev');
-      // eslint-disable-next-line no-console
+       
       console.log('💡 Or run this script with --frontend flag to start both');
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error('❌ Error:', error);
     process.exit(1);
   }

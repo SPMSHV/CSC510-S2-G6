@@ -122,7 +122,7 @@ async function syncTelemetryRobots(): Promise<void> {
     telemetryService.syncWithDatabaseRobots(robotsToSync);
   } catch (error) {
     // Log error but don't crash
-    // eslint-disable-next-line no-console
+     
     console.error('[Robot Assignment] Error syncing telemetry robots:', error);
   }
 }
@@ -150,12 +150,12 @@ async function processWaitingReadyOrders(): Promise<void> {
         if (nearestRobot) {
           await assignRobotToOrder(order.id, nearestRobot.id);
           assigned = true;
-          // eslint-disable-next-line no-console
+           
           console.log(`[Robot Assignment] Assigned robot ${nearestRobot.robotId} to order ${order.id}`);
         }
       } catch (error) {
         // Log error but continue processing other orders
-        // eslint-disable-next-line no-console
+         
         console.error(`[Robot Assignment] Failed to assign robot to order ${order.id}:`, error);
       }
     }
@@ -166,7 +166,7 @@ async function processWaitingReadyOrders(): Promise<void> {
     }
   } catch (error) {
     // Log error but don't crash the service
-    // eslint-disable-next-line no-console
+     
     console.error('[Robot Assignment] Error processing waiting orders:', error);
   }
 }
@@ -200,7 +200,7 @@ class OrderAssignmentService {
       syncTelemetryRobots();
     }, this.pollInterval);
 
-    // eslint-disable-next-line no-console
+     
     console.log(`[Order Assignment Service] Started polling every ${this.pollInterval / 1000} seconds`);
   }
 
@@ -210,7 +210,7 @@ class OrderAssignmentService {
       this.intervalId = null;
     }
     this.running = false;
-    // eslint-disable-next-line no-console
+     
     console.log('[Order Assignment Service] Stopped');
   }
 

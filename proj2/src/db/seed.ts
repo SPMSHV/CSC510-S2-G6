@@ -4,7 +4,6 @@ import http from 'http';
 dotenv.config();
 
 const PORT = parseInt(process.env.PORT || '3000', 10);
-const BASE_URL = `http://localhost:${PORT}`;
 
 interface ApiResponse {
   statusCode: number;
@@ -46,7 +45,7 @@ function httpRequest(method: string, path: string, body?: unknown, token?: strin
               statusCode: res.statusCode || 200,
               body: parsed,
             });
-          } catch (e) {
+          } catch (_e) {
             resolve({
               statusCode: res.statusCode || 200,
               body: responseBody,
@@ -69,14 +68,14 @@ async function waitForServer(maxAttempts = 30, delay = 1000): Promise<void> {
     try {
       const response = await httpRequest('GET', '/health');
       if (response.statusCode === 200) {
-        // eslint-disable-next-line no-console
+         
         console.log('✓ Backend server is ready');
         return;
       }
     } catch (error) {
       // Server not ready yet
     }
-    // eslint-disable-next-line no-console
+     
     console.log(`Waiting for backend server... (${i + 1}/${maxAttempts})`);
     await new Promise((resolve) => setTimeout(resolve, delay));
   }
@@ -159,7 +158,7 @@ async function createMenuItem(
   );
 
   if (response.statusCode !== 201) {
-    // eslint-disable-next-line no-console
+     
     console.warn(`Warning: Failed to create menu item ${name}: ${response.body.error || 'Unknown error'}`);
   }
 }
@@ -173,7 +172,7 @@ async function createRobot(robotId: string, status: string, batteryPercent: numb
   });
 
   if (response.statusCode !== 201 && response.statusCode !== 409) {
-    // eslint-disable-next-line no-console
+     
     console.warn(`Warning: Failed to create robot ${robotId}: ${response.body.error || 'Unknown error'}`);
   }
 }
@@ -222,21 +221,21 @@ async function createOrder(
   });
 
   if (response.statusCode !== 201) {
-    // eslint-disable-next-line no-console
+     
     console.warn(`Warning: Failed to create order: ${response.body.error || 'Unknown error'}`);
   }
 }
 
 async function main() {
   try {
-    // eslint-disable-next-line no-console
+     
     console.log('🌱 Starting seed process...');
     
     // Wait for backend to be ready
     await waitForServer();
 
     // Register vendors and get tokens
-    // eslint-disable-next-line no-console
+     
     console.log('👥 Creating vendors...');
     const pizzaVendor = await registerVendor(
       'pizza@campusbot.edu',
@@ -270,7 +269,7 @@ async function main() {
     );
 
     // Create restaurants
-    // eslint-disable-next-line no-console
+     
     console.log('🍕 Creating restaurants...');
     
     const pizzaId = await createRestaurant(
@@ -316,7 +315,7 @@ async function main() {
     );
 
     // Create menu items for Pizza Palace
-    // eslint-disable-next-line no-console
+     
     console.log('📋 Adding menu items...');
     
     await createMenuItem(pizzaVendor.token, pizzaId, 'Margherita Pizza', 12.99, 'Classic tomato, mozzarella, and fresh basil', 'Pizza');
@@ -373,19 +372,19 @@ async function main() {
     await createMenuItem(medVendor.token, medId, 'Baklava', 4.99, 'Sweet pastry with honey and nuts', 'Desserts');
 
     // Create robots
-    // eslint-disable-next-line no-console
+     
     console.log('🤖 Creating robots...');
     await createRobot('RB-01', 'IDLE', 95, { lat: 35.7871, lng: -78.6701 });
     await createRobot('RB-02', 'IDLE', 88, { lat: 35.7881, lng: -78.6711 });
     await createRobot('RB-03', 'CHARGING', 45, { lat: 35.7861, lng: -78.6691 });
 
     // Create a student for sample orders
-    // eslint-disable-next-line no-console
+     
     console.log('👨‍🎓 Creating sample student...');
     const studentId = await createStudent('student@university.edu', 'Student One');
 
     // Create sample orders
-    // eslint-disable-next-line no-console
+     
     console.log('📦 Creating sample orders...');
     await createOrder(
       studentId,
@@ -411,28 +410,28 @@ async function main() {
       -78.6681,
     );
 
-    // eslint-disable-next-line no-console
+     
     console.log('✅ Seed complete!');
-    // eslint-disable-next-line no-console
+     
     console.log(`\n📊 Summary:`);
-    // eslint-disable-next-line no-console
+     
     console.log(`   - 6 Restaurants created`);
-    // eslint-disable-next-line no-console
+     
     console.log(`   - Multiple menu items per restaurant`);
-    // eslint-disable-next-line no-console
+     
     console.log(`   - 3 Robots created`);
-    // eslint-disable-next-line no-console
+     
     console.log(`   - 1 Student account created`);
-    // eslint-disable-next-line no-console
+     
     console.log(`   - 2 Sample orders created`);
-    // eslint-disable-next-line no-console
+     
     console.log(`\n🌐 Visit http://localhost:${PORT}/api-docs to view API documentation`);
-    // eslint-disable-next-line no-console
+     
     console.log(`\n💡 All vendors use password: vendor123`);
-    // eslint-disable-next-line no-console
+     
     console.log(`💡 Student uses password: student123`);
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error('❌ Seed failed:', error);
     process.exit(1);
   }
