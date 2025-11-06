@@ -133,7 +133,7 @@ export default function HomePage() {
       <Header />
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" role="main" aria-label="Restaurant browsing">
         {/* Search Bar */}
         <div className="mb-6">
           <SearchBar value={searchQuery} onChange={setSearchQuery} />
@@ -141,23 +141,27 @@ export default function HomePage() {
 
         {/* Results Header */}
         <div className="mb-4">
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h2 className="text-xl font-semibold text-gray-900" id="restaurants-heading">
             {searchQuery ? `Search Results (${filteredRestaurants.length})` : 'Available Restaurants'}
           </h2>
           {searchQuery && filteredRestaurants.length === 0 && (
-            <p className="mt-2 text-gray-600">No restaurants found matching your search.</p>
+            <p className="mt-2 text-gray-600" role="status" aria-live="polite">
+              No restaurants found matching your search.
+            </p>
           )}
         </div>
 
         {/* Restaurant Grid */}
         {filteredRestaurants.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" role="list" aria-labelledby="restaurants-heading">
             {filteredRestaurants.map((restaurant) => (
-              <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+              <div key={restaurant.id} role="listitem">
+                <RestaurantCard restaurant={restaurant} />
+              </div>
             ))}
           </div>
         ) : !loading && !searchQuery ? (
-          <div className="text-center py-12">
+          <div className="text-center py-12" role="status" aria-live="polite">
             <p className="text-gray-600">No restaurants available at this time.</p>
           </div>
         ) : null}

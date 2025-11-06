@@ -9,15 +9,16 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
   return (
     <Link
       to={`/restaurant/${restaurant.id}`}
-      className="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden"
+      className="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+      aria-label={`View menu for ${restaurant.name}`}
     >
-      <div className="aspect-video bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+      <div className="aspect-video bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center" aria-hidden="true">
         <div className="text-white text-4xl font-bold">
           {restaurant.name.charAt(0).toUpperCase()}
         </div>
       </div>
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900 mb-1">{restaurant.name}</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-1" aria-label={`Restaurant: ${restaurant.name}`}>{restaurant.name}</h3>
         {restaurant.description && (
           <p className="text-sm text-gray-600 mb-2 line-clamp-2">{restaurant.description}</p>
         )}
