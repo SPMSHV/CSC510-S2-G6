@@ -30,7 +30,7 @@ jobs:
 
             - name: Install dependencies
               working-directory: proj2
-              run: npm ci
+              run: npm install
 
             - name: Run tests with coverage
               id: tests
