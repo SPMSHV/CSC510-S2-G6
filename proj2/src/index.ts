@@ -1,12 +1,16 @@
 /**
- * Copyright (c) 2025 CampusBot Contributors
- * Licensed under the MIT License
+ * Copyright (c) 2025 CampusBot Team - Group 6
+ * Pranshav Gajjar, Aniruddh Sanjeev Bhagwat, Ishan Patel, Hardik Majethia, and Contributors
+ *
+ * MIT License
+ * See LICENSE.md for full license text
  */
 
 import dotenv from 'dotenv';
 import { createServer } from './server';
 import { maybeStartTelemetryFromEnv, telemetryService } from './services/telemetry';
 import { maybeStartOrderAssignmentService } from './services/orderAssignmentService';
+import { maybeStartOrderAutomation } from './services/orderAutomation';
 
 dotenv.config();
 
@@ -23,4 +27,6 @@ app.listen(port, host, () => {
   maybeStartTelemetryFromEnv();
   // Start background service for robot assignment to waiting READY orders
   maybeStartOrderAssignmentService();
+  // Start background service for automatic order status transitions
+  maybeStartOrderAutomation();
 });

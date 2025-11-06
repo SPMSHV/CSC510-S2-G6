@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) 2025 CampusBot Team - Group 6
+ * Pranshav Gajjar, Aniruddh Sanjeev Bhagwat, Ishan Patel, Hardik Majethia, and Contributors
+ *
+ * MIT License
+ * See LICENSE.md for full license text
+ */
+
 import * as orderQueries from '../db/queries/orders';
 import * as robotQueries from '../db/queries/robots';
 

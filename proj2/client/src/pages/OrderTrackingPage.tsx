@@ -45,13 +45,20 @@ export default function OrderTrackingPage() {
     fetchTrackingInfo();
   }, [id]);
 
-  // Set up polling - refresh every 10 seconds if order is not completed
+  // Set up polling - refresh more frequently for active orders
   useEffect(() => {
     if (!id) return;
     if (!trackingInfo) return;
     if (trackingInfo.order.status === 'DELIVERED' || trackingInfo.order.status === 'CANCELLED') {
       return;
     }
+
+    // Poll more frequently (every 5 seconds) for ASSIGNED and EN_ROUTE statuses
+    // since they transition automatically
+    const pollInterval = 
+      trackingInfo.order.status === 'ASSIGNED' || trackingInfo.order.status === 'EN_ROUTE' 
+        ? 5000  // 5 seconds for active delivery statuses
+        : 10000; // 10 seconds for other statuses
 
     const interval = setInterval(async () => {
       try {
@@ -61,7 +68,7 @@ export default function OrderTrackingPage() {
         // Silently fail polling errors, don't show error state
         console.error('Failed to poll order tracking:', err);
       }
-    }, 10000);
+    }, pollInterval);
 
     return () => clearInterval(interval);
   }, [id, trackingInfo?.order.status]);

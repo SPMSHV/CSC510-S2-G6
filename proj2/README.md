@@ -1,13 +1,13 @@
 # 🤖 CampusBot — Autonomous Campus Food Delivery
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/SPMSHV/CSC510-S2-G6/ci.yml?branch=main&label=Build)](https://github.com/SPMSHV/CSC510-S2-G6/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-437%20passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19150094004)
-[![Coverage](https://img.shields.io/badge/coverage-73%25-green)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19150094004)
+[![Tests](https://img.shields.io/badge/tests-437%20passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19151291145)
+[![Coverage](https://img.shields.io/badge/coverage-68%25-green)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19151291145)
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/SPMSHV/CSC510-S2-G6/blob/main/proj2/LICENSE.md)
 [![Node Version](https://img.shields.io/badge/node-18.x-green)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19150094004)
-[![ESLint](https://img.shields.io/badge/ESLint-passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19150094004)
-[![Prettier](https://img.shields.io/badge/Prettier-formatted-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19150094004)
+[![TypeScript](https://img.shields.io/badge/TypeScript-passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19151291145)
+[![ESLint](https://img.shields.io/badge/ESLint-passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19151291145)
+[![Prettier](https://img.shields.io/badge/Prettier-formatted-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19151291145)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.17544418-blue)](https://doi.org/10.5281/zenodo.17544418)
 
 
@@ -60,23 +60,30 @@ Online and on-campus food options are fragmented, slow, and costly to manage whe
 ## ✨ Features
 
 ### ✅ Milestone 1: Core API Foundation (Completed Oct 2025)
-- **Orders API** - Full CRUD operations for food orders
+- **Orders API** - Full CRUD operations for food orders with status management
 - **Robots API** - Fleet management and robot status tracking
-- **Users API** - User profiles and roles
-- **Restaurants API** - Restaurant and menu management
+- **Users API** - User profiles, roles, and authentication
+- **Restaurants API** - Restaurant and menu management with menu items
 - **RESTful Architecture** - Clean, documented REST endpoints
-- **OpenAPI Specification** - Complete API documentation
-- **Database Schema** - PostgreSQL-ready; in-memory default for dev
-- **Sample Data** - Seed script for quick demos
+- **OpenAPI Specification** - Complete API documentation with Swagger UI
+- **Database Schema** - PostgreSQL-ready; in-memory default for development
+- **Sample Data** - Seed script for quick demos and testing
+- **Comprehensive Testing** - 437 test cases across 23 test suites
+- **CI/CD Pipeline** - GitHub Actions for automated testing and deployment
+- **Docker Support** - Containerization with Docker and Docker Compose
 
 ### ✅ Milestone 2: Student Mobile UI (Completed Oct 2025)
-- **Home Page** - Browse restaurants and search functionality
-- **Restaurant Menu** - View menus, add items to cart
-- **Checkout Flow** - Order placement with delivery location
+- **Home Page** - Browse restaurants with search functionality
+- **Restaurant Detail Page** - View menus, add items to cart
+- **Shopping Cart** - Add/remove items, view totals
+- **Checkout Flow** - Order placement with delivery location and coordinates
 - **Live Order Tracking** - Real-time order status with progress bar
-- **My Orders** - View order history and track active orders
+- **My Orders Page** - View order history and track active orders with auto-refresh
 - **Authentication** - User registration, login, and session management
+- **JWT Authentication** - Secure token-based authentication
+- **Role-Based Access Control** - Student, Vendor, Admin, Engineer roles
 - **Responsive Design** - Mobile-first UI with Tailwind CSS
+- **Password Security** - Bcrypt hashing and validation
 
 ### ✅ Milestone 3: Simulated Robot Telemetry & Fleet Dashboard (Completed Oct 2025)
 - **Telemetry Generator** - Simulates 5 robots with live position, battery, and status updates
@@ -89,6 +96,22 @@ Online and on-campus food options are fragmented, slow, and costly to manage whe
 - **Stop Command** - Simulated emergency stop functionality for fleet control
 - **SSE Streaming** - Server-Sent Events for real-time telemetry updates
 - **Connection Status** - Live connection indicator for telemetry stream
+- **Telemetry API** - Complete endpoints for snapshot and streaming
+- **Robot Health Monitoring** - Real-time status tracking and diagnostics
+
+### ✅ Milestone 4: Vendor Kiosk + Order Handoff Flow (Completed Nov 2025)
+- **Vendor Kiosk UI** - Dedicated interface for restaurant order management (`/vendor/kiosk`)
+- **Order Acceptance Workflow** - Vendors can accept and manage incoming orders
+- **Order Status Transitions** - CREATED → PREPARING → READY workflow
+- **Automatic Robot Assignment** - Robots automatically assigned when orders become READY
+- **Order Automation** - Automatic status transitions (ASSIGNED → EN_ROUTE → DELIVERED)
+- **Vendor Authorization** - Role-based access control for vendor operations
+- **Order Filtering** - Filter orders by status (CREATED, PREPARING, READY, etc.)
+- **Order Details Modal** - Full order information display
+- **Real-time Updates** - Polling mechanism for live order status updates
+- **End-to-End Lifecycle** - Complete flow: Student → Vendor → Robot → Delivery
+- **Comprehensive Testing** - 40+ tests for vendor functionality
+- **Coordinate-Based Assignment** - Nearest robot assignment using Haversine formula
 
 ### ✅ Additional Features
 - **Data Import/Export** - Export data in JSON/CSV formats, import data from JSON (admin only)
@@ -97,9 +120,10 @@ Online and on-campus food options are fragmented, slow, and costly to manage whe
 - **License Headers** - Copyright and license headers in source files
 
 ### Quality & Testing
-- ✅ **419 Test Cases** - Comprehensive coverage including nominal and off-nominal scenarios
-- ✅ **22 Test Suites** - All passing with 100% success rate
+- ✅ **437 Test Cases** - Comprehensive coverage including nominal and off-nominal scenarios
+- ✅ **23 Test Suites** - All passing with 100% success rate
 - ✅ **Telemetry Tests** - Full test coverage for new telemetry features
+- ✅ **73% Code Coverage** - Statements, branches, functions, and lines
 - ✅ **Automated CI** - GitHub Actions for lint/build/test
 - ✅ **Type Safety** - Full TypeScript implementation
 - ✅ **Code Quality Tools** - ESLint, Prettier
@@ -207,91 +231,238 @@ curl -X POST http://localhost:3000/api/telemetry/robots/sim-1/stop
 
 ```
 proj2/
-├── src/
-│   ├── db/
-│   │   ├── queries/
-│   │   ├── client.ts
-│   │   ├── migrate.ts
-│   │   └── seed.ts
-│   ├── services/
-│   │   ├── orderTracking.ts
-│   │   ├── robotAssignment.ts
-│   │   └── telemetry.ts          # 🆕 Milestone 3: Telemetry simulator
-│   ├── web/
+├── src/                              # Backend source code
+│   ├── db/                           # Database layer
+│   │   ├── queries/                  # Database query functions
+│   │   │   ├── menuItems.ts         # Menu item queries
+│   │   │   ├── orders.ts            # Order queries
+│   │   │   ├── restaurants.ts       # Restaurant queries
+│   │   │   ├── robots.ts           # Robot queries
+│   │   │   └── users.ts            # User queries
+│   │   ├── client.ts                # Database client (PostgreSQL/in-memory)
+│   │   ├── migrate.ts               # Database migrations
+│   │   ├── rollback.ts              # Migration rollback
+│   │   └── seed.ts                 # Seed script for sample data
+│   ├── services/                     # Business logic services
+│   │   ├── orderAssignmentService.ts # Automatic order-to-robot assignment
+│   │   ├── orderAutomation.ts       # 🆕 Milestone 4: Auto status transitions
+│   │   ├── orderTracking.ts         # Order tracking and progress
+│   │   ├── robotAssignment.ts       # Robot assignment logic (Haversine)
+│   │   └── telemetry.ts             # 🆕 Milestone 3: Telemetry simulator
+│   ├── web/                          # Web layer
 │   │   ├── middleware/
-│   │   │   └── auth.ts
-│   │   └── routes/
-│   │       ├── auth.ts
-│   │       ├── orders.ts
-│   │       ├── restaurants.ts
-│   │       ├── robots.ts
-│   │       ├── telemetry.ts      # 🆕 Milestone 3: Telemetry endpoints
-│   │       └── users.ts
-│   ├── server.ts
-│   └── index.ts
-├── client/
+│   │   │   └── auth.ts              # JWT authentication middleware
+│   │   └── routes/                   # API route handlers
+│   │       ├── auth.ts              # Authentication routes
+│   │       ├── export.ts            # Data export/import routes
+│   │       ├── orders.ts            # Order routes (includes vendor endpoints)
+│   │       ├── restaurants.ts       # Restaurant routes
+│   │       ├── robots.ts           # Robot routes
+│   │       ├── telemetry.ts        # 🆕 Milestone 3: Telemetry routes
+│   │       ├── users.ts            # User routes
+│   │       └── routes.ts           # Route aggregator
+│   ├── server.ts                     # Express server setup
+│   └── index.ts                      # Application entry point
+├── client/                            # React frontend application
 │   ├── src/
-│   │   ├── components/
-│   │   ├── context/
+│   │   ├── components/              # Reusable React components
+│   │   │   ├── AuthModal.tsx        # Authentication modal
+│   │   │   ├── Cart.tsx             # Shopping cart component
+│   │   │   ├── CheckoutModal.tsx   # Checkout form with coordinates
+│   │   │   ├── Header.tsx           # Navigation header
+│   │   │   ├── MenuItemCard.tsx    # Menu item display
+│   │   │   ├── OrderCard.tsx       # Order display card
+│   │   │   ├── OrderDetailsModal.tsx # Order details popup
+│   │   │   ├── OrderProgressBar.tsx # Order status progress
+│   │   │   ├── RestaurantCard.tsx  # Restaurant display card
+│   │   │   ├── RobotInfo.tsx       # Robot information display
+│   │   │   ├── SearchBar.tsx       # Search functionality
+│   │   │   └── VendorOrderCard.tsx # 🆕 Milestone 4: Vendor order card
+│   │   ├── context/                 # React context providers
+│   │   │   ├── AuthContext.tsx      # Authentication state
+│   │   │   └── CartContext.tsx      # Shopping cart state
 │   │   ├── lib/
-│   │   ├── pages/
-│   │   │   ├── HomePage.tsx
-│   │   │   ├── RestaurantDetailPage.tsx
-│   │   │   ├── MyOrdersPage.tsx
-│   │   │   ├── OrderTrackingPage.tsx
-│   │   │   └── FleetDashboardPage.tsx  # 🆕 Milestone 3: Fleet dashboard
-│   │   └── types/
+│   │   │   └── api.ts               # API client functions
+│   │   ├── pages/                   # Page components
+│   │   │   ├── FleetDashboardPage.tsx # 🆕 Milestone 3: Fleet dashboard
+│   │   │   ├── HomePage.tsx         # Restaurant browsing
+│   │   │   ├── MyOrdersPage.tsx     # User order history
+│   │   │   ├── OrderTrackingPage.tsx # Live order tracking
+│   │   │   ├── RestaurantDetailPage.tsx # Menu viewing
+│   │   │   └── VendorKioskPage.tsx # 🆕 Milestone 4: Vendor kiosk
+│   │   ├── types/
+│   │   │   └── index.ts             # TypeScript type definitions
+│   │   ├── App.tsx                  # Main app component
+│   │   └── main.tsx                 # React entry point
 │   └── package.json
-├── scripts/
-│   ├── dev-with-seed.ts
-│   └── telemetry-sim.ts           # 🆕 Milestone 3: Telemetry generator
-├── tests/
-│   ├── telemetry.test.ts          # 🆕 Milestone 3: Telemetry tests
-│   └── ...
-├── docs/
-│   ├── openapi.yaml
-│   ├── ROADMAP.md
-│   └── SUSTAINABILITY.md
-├── .github/workflows/ci.yml
-├── Dockerfile
-├── docker-compose.yml
-├── package.json
-└── tsconfig.json
+├── scripts/                          # Utility scripts
+│   ├── dev-with-seed.ts             # Development server with seeding
+│   ├── generate-dependency-docs.ts  # Generate dependency documentation
+│   └── telemetry-sim.ts             # 🆕 Milestone 3: Telemetry generator
+├── tests/                            # Test suite (437 tests, 23 suites)
+│   ├── db/                          # Database tests
+│   │   ├── client.test.ts
+│   │   └── queries/                 # Query function tests
+│   ├── middleware/                  # Middleware tests
+│   │   └── auth.test.ts
+│   ├── services/                    # Service tests
+│   │   ├── orderTracking.test.ts
+│   │   └── robotAssignment.test.ts
+│   ├── auth.test.ts                 # Authentication tests
+│   ├── health.test.ts               # Health check tests
+│   ├── export.test.ts              # Data export/import tests
+│   ├── orders.test.ts               # Order API tests
+│   ├── orders.validation.test.ts   # Order validation tests
+│   ├── orderTracking.test.ts        # Order tracking tests
+│   ├── restaurants.test.ts          # Restaurant API tests
+│   ├── robots.test.ts              # Robot API tests
+│   ├── robots.validation.test.ts   # Robot validation tests
+│   ├── telemetry.test.ts           # 🆕 Milestone 3: Telemetry tests
+│   ├── users.test.ts               # User API tests
+│   ├── users.validation.test.ts    # User validation tests
+│   ├── vendorOrders.test.ts        # 🆕 Milestone 4: Vendor order tests
+│   └── vendorService.test.ts       # 🆕 Milestone 4: Vendor service tests
+├── docs/                             # Documentation
+│   ├── ACCESSIBILITY.md             # Accessibility standards and testing
+│   ├── API_REFERENCE.md             # Comprehensive API reference
+│   ├── BACKEND.md                   # Backend API guide with examples
+│   ├── DEMO_GUIDE.md                # End-to-end demo guide
+│   ├── DEPENDENCIES.md              # Dependency licenses
+│   ├── FRONTEND.md                  # Frontend architecture and UI patterns
+│   ├── openapi.yaml                 # OpenAPI 3.0 specification
+│   ├── RELEASES.md                  # Release management guide
+│   ├── ROADMAP.md                   # Project roadmap
+│   └── SUSTAINABILITY.md            # Sustainability documentation
+├── db/
+│   └── schema.sql                   # PostgreSQL database schema
+├── dist/                             # Compiled JavaScript (build output)
+├── coverage/                         # Test coverage reports
+├── .github/
+│   └── workflows/
+│       └── ci.yml                   # GitHub Actions CI/CD
+├── client/scripts/                   # Client utility scripts
+│   └── check-and-seed.js            # Check and seed database script
+├── Dockerfile                        # Docker container definition
+├── docker-compose.yml                # Docker Compose configuration
+├── package.json                      # Backend dependencies
+├── Section_2_Group_6.pdf            # Project documentation PDF
+├── SECURITY.md                       # Security policy
+├── tsconfig.json                     # TypeScript configuration
+├── tsconfig.build.json               # Build-specific TypeScript config
+└── video_demo.mp4                    # Demo video file
 ```
 
 ---
 
 ## 🎯 Milestones
 
-### ✅ Milestone 1: Core API Foundation (COMPLETED)
-- REST spec + OpenAPI file
-- Basic CRUD for Orders, Robots, Users, Restaurants
-- `GET /orders` & `GET /robots` return sample data
-- Database schema and seed scripts
-- Tests and CI configured
+### ✅ Milestone 1: Core API Foundation (Completed Oct 2025)
 
-### ✅ Milestone 2: Student Mobile UI (COMPLETED)
-- Home, Menu, Checkout, Live Track mock in React
-- Clickable flows for ordering → tracking
-- Authentication and user management
-- Responsive mobile-first design
+**Objective**: Build a robust RESTful API foundation with comprehensive data models and testing infrastructure.
 
-### ✅ Milestone 3: Simulated Robot Telemetry & Fleet Dashboard (COMPLETED)
-- Telemetry generator script for 5 simulated robots
-- Fleet dashboard showing battery, position, speed, distance
-- Ability to send simulated "stop" command
-- Real-time SSE streaming for live updates
+**Key Achievements**:
+- ✅ Complete REST API with Express.js and TypeScript
+- ✅ Full CRUD operations for Orders, Robots, Users, and Restaurants
+- ✅ OpenAPI 3.0 specification with Swagger UI documentation
+- ✅ Dual database support: PostgreSQL (production) and in-memory (development)
+- ✅ Database migrations and seed scripts for sample data
+- ✅ Comprehensive test suite with 437 test cases across 23 test suites
+- ✅ CI/CD pipeline with GitHub Actions
+- ✅ Docker containerization support
+- ✅ Project governance: CONTRIBUTING.md, CODE_OF_CONDUCT.md, LICENSE.md
 
-### ✅ Milestone 4: Vendor Kiosk + Order Handoff Flow (COMPLETED)
-- Vendor kiosk UI for order management (`/vendor/kiosk`)
-- Order status transitions (CREATED → PREPARING → READY)
-- Automatic robot assignment when order becomes READY
-- Vendor authorization and access control
-- Real-time order updates with status filtering
-- Order details modal with full information
-- End-to-end order lifecycle: student → vendor → robot assignment
-- Comprehensive test suite (40+ tests)
-- See [DEMO_GUIDE.md](docs/DEMO_GUIDE.md) for end-to-end demo instructions
+**API Endpoints**:
+- `GET/POST /api/orders` - Order management
+- `GET/POST /api/robots` - Robot fleet management
+- `GET/POST /api/users` - User management
+- `GET/POST /api/restaurants` - Restaurant and menu management
+
+---
+
+### ✅ Milestone 2: Student Mobile UI (Completed Oct 2025)
+
+**Objective**: Create an intuitive mobile-first interface for students to browse, order, and track food deliveries.
+
+**Key Achievements**:
+- ✅ Home page with restaurant browsing and search functionality
+- ✅ Restaurant detail pages with menu viewing and cart management
+- ✅ Shopping cart with add/remove items and total calculation
+- ✅ Checkout flow with delivery location and coordinate input
+- ✅ Live order tracking page with real-time progress bar
+- ✅ My Orders page with order history and auto-refresh polling
+- ✅ User authentication: registration, login, and session management
+- ✅ JWT-based secure authentication with bcrypt password hashing
+- ✅ Role-based access control (STUDENT, VENDOR, ADMIN, ENGINEER)
+- ✅ Responsive mobile-first design with Tailwind CSS
+- ✅ Real-time order status updates with dynamic polling intervals
+
+**User Flows**:
+1. Browse restaurants → View menu → Add to cart → Checkout → Track order
+2. Register/Login → View order history → Track active orders
+
+---
+
+### ✅ Milestone 3: Simulated Robot Telemetry & Fleet Dashboard (Completed Oct 2025)
+
+**Objective**: Implement real-time robot telemetry simulation and fleet management dashboard for monitoring and control.
+
+**Key Achievements**:
+- ✅ Telemetry generator script simulating 5 robots with realistic data
+- ✅ Fleet dashboard UI with real-time updates via Server-Sent Events (SSE)
+- ✅ Robot metrics display: battery, location, speed, distance traveled
+- ✅ Visual status indicators with color-coded badges (IDLE, ASSIGNED, EN_ROUTE, etc.)
+- ✅ Emergency stop command functionality for fleet control
+- ✅ Live connection status indicator for telemetry stream
+- ✅ Telemetry API endpoints: `/api/telemetry/snapshot` and `/api/telemetry/stream`
+- ✅ Comprehensive telemetry test suite (437 total tests)
+- ✅ Real-time position updates using simulated movement algorithms
+
+**Dashboard Features**:
+- Battery percentage with visual indicators
+- Current GPS coordinates (latitude/longitude)
+- Speed in km/h and total distance traveled
+- Status badges with color coding
+- Last update timestamps
+- Connection status indicator
+
+---
+
+### ✅ Milestone 4: Vendor Kiosk + Order Handoff Flow (Completed Nov 2025)
+
+**Objective**: Enable vendors to manage orders and automate the complete order lifecycle from creation to delivery.
+
+**Key Achievements**:
+- ✅ Vendor kiosk UI (`/vendor/kiosk`) for order management
+- ✅ Order acceptance workflow: vendors can accept incoming orders
+- ✅ Order status transitions: CREATED → PREPARING → READY
+- ✅ Automatic robot assignment when orders become READY
+- ✅ Order automation service: automatic transitions (ASSIGNED → EN_ROUTE → DELIVERED)
+- ✅ Vendor authorization and role-based access control
+- ✅ Order filtering by status (CREATED, PREPARING, READY, ASSIGNED, etc.)
+- ✅ Order details modal with complete order information
+- ✅ Real-time order updates with polling mechanism
+- ✅ Coordinate-based robot assignment using Haversine distance formula
+- ✅ End-to-end order lifecycle: Student → Vendor → Robot → Delivery
+- ✅ Comprehensive test suite: 437 total tests including vendor functionality
+- ✅ Delivery coordinate input in checkout for accurate robot assignment
+
+**Order Lifecycle**:
+1. **Student** places order (CREATED)
+2. **Vendor** accepts order (PREPARING)
+3. **Vendor** marks order ready (READY)
+4. **System** automatically assigns nearest robot (ASSIGNED)
+5. **System** automatically transitions to en route (EN_ROUTE) after 30 seconds
+6. **System** automatically marks delivered (DELIVERED) after 1 minute
+7. **Robot** returns to IDLE status
+
+**Technical Features**:
+- Nearest robot calculation using Haversine formula
+- Automatic order status transitions with configurable delays
+- Real-time polling for order updates
+- Coordinate-based delivery location support
+- Vendor-specific order filtering and management
+
+See [docs/DEMO_GUIDE.md](docs/DEMO_GUIDE.md) for end-to-end demo instructions.
 
 ---
 

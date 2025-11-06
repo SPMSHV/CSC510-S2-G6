@@ -1,6 +1,9 @@
 /**
- * Copyright (c) 2025 CampusBot Contributors
- * Licensed under the MIT License
+ * Copyright (c) 2025 CampusBot Team - Group 6
+ * Pranshav Gajjar, Aniruddh Sanjeev Bhagwat, Ishan Patel, Hardik Majethia, and Contributors
+ *
+ * MIT License
+ * See LICENSE.md for full license text
  */
 
 import express, { Request, Response } from 'express';

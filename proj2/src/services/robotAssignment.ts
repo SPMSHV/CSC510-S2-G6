@@ -1,5 +1,6 @@
 import * as robotQueries from '../db/queries/robots';
 import * as orderQueries from '../db/queries/orders';
+import { orderAutomationService } from './orderAutomation';
 
 /**
  * Calculate distance between two coordinates using Haversine formula
@@ -46,11 +47,18 @@ export async function findNearestAvailableRobot(
  * Assign a robot to an order
  */
 export async function assignRobotToOrder(orderId: string, robotId: string): Promise<void> {
+  console.log(`[Robot Assignment] Assigning robot ${robotId} to order ${orderId}`);
+  
   // Update order with robot_id and status to ASSIGNED
   await orderQueries.updateOrder(orderId, { robotId, status: 'ASSIGNED' });
 
   // Update robot status to ASSIGNED
   await robotQueries.updateRobot(robotId, { status: 'ASSIGNED' });
+
+  console.log(`[Robot Assignment] Robot ${robotId} assigned to order ${orderId}, triggering automation`);
+
+  // Schedule automatic transitions (ASSIGNED → EN_ROUTE → DELIVERED)
+  await orderAutomationService.scheduleTransitions(orderId);
 }
 
 /**
@@ -65,11 +73,20 @@ export async function processOrderStatusChange(orderId: string, newStatus: order
 
   // If order status is now READY and no robot is assigned yet, assign one
   if (newStatus === 'READY' && !order.robotId && order.deliveryLocationLat && order.deliveryLocationLng) {
+    console.log(`[Robot Assignment] Order ${orderId} is READY, attempting to assign robot...`);
     const nearestRobot = await findNearestAvailableRobot(order.deliveryLocationLat, order.deliveryLocationLng);
     if (nearestRobot) {
       await assignRobotToOrder(orderId, nearestRobot.id);
+    } else {
+      console.log(`[Robot Assignment] No available robots found for order ${orderId}. Order will stay in READY status.`);
     }
     // If no robot available, order stays in READY status until a robot becomes available
+  } else if (newStatus === 'READY') {
+    if (order.robotId) {
+      console.log(`[Robot Assignment] Order ${orderId} is READY but already has robot ${order.robotId}`);
+    } else if (!order.deliveryLocationLat || !order.deliveryLocationLng) {
+      console.log(`[Robot Assignment] Order ${orderId} is READY but missing delivery coordinates (lat: ${order.deliveryLocationLat}, lng: ${order.deliveryLocationLng})`);
+    }
   }
 
   // If order status is now EN_ROUTE, update robot status

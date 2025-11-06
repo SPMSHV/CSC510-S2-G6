@@ -3,6 +3,7 @@ import * as orderQueries from '../db/queries/orders';
 import { getReadyOrdersWithoutRobotsFromMemory, orders } from '../web/routes/orders';
 import { getAvailableRobotsFromMemory, robots } from '../web/routes/robots';
 import { telemetryService } from './telemetry';
+import { orderAutomationService } from './orderAutomation';
 
 /**
  * Calculate distance between two coordinates using Haversine formula
@@ -67,7 +68,9 @@ async function findNearestAvailableRobot(
   deliveryLng: number,
 ): Promise<robotQueries.Robot | null> {
   const availableRobots = await getAvailableRobots();
+  console.log(`[Robot Assignment] Found ${availableRobots.length} available robots`);
   if (availableRobots.length === 0) {
+    console.log(`[Robot Assignment] No available robots (all robots may be ASSIGNED, EN_ROUTE, CHARGING, etc.)`);
     return null;
   }
 
@@ -133,15 +136,18 @@ async function syncTelemetryRobots(): Promise<void> {
 async function processWaitingReadyOrders(): Promise<void> {
   try {
     const readyOrders = await getReadyOrdersWithoutRobots();
+    console.log(`[Robot Assignment] Polling: Found ${readyOrders.length} READY orders without robots`);
     let assigned = false;
 
     for (const order of readyOrders) {
       try {
         // Only process orders with delivery coordinates
         if (!order.deliveryLocationLat || !order.deliveryLocationLng) {
+          console.log(`[Robot Assignment] Order ${order.id} is READY but missing delivery coordinates, skipping`);
           continue;
         }
 
+        console.log(`[Robot Assignment] Attempting to assign robot to order ${order.id} (delivery: ${order.deliveryLocationLat}, ${order.deliveryLocationLng})`);
         const nearestRobot = await findNearestAvailableRobot(
           order.deliveryLocationLat,
           order.deliveryLocationLng,
@@ -149,9 +155,12 @@ async function processWaitingReadyOrders(): Promise<void> {
 
         if (nearestRobot) {
           await assignRobotToOrder(order.id, nearestRobot.id);
+          // Schedule automatic transitions for the newly assigned order
+          await orderAutomationService.scheduleTransitions(order.id);
           assigned = true;
-           
-          console.log(`[Robot Assignment] Assigned robot ${nearestRobot.robotId} to order ${order.id}`);
+          console.log(`[Robot Assignment] Successfully assigned robot ${nearestRobot.robotId} to order ${order.id}`);
+        } else {
+          console.log(`[Robot Assignment] No available robots found for order ${order.id}`);
         }
       } catch (error) {
         // Log error but continue processing other orders
