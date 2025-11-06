@@ -17,8 +17,9 @@
 
 ## 📺 Demo Video
 
+Watch our 3-minute demonstration showing how students order food, how vendors manage orders, and how autonomous robots handle deliveries on campus:
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/3s_SQrm5GHk/0.jpg)](https://www.youtube.com/watch?v=3s_SQrm5GHk)
+[![CampusBot Demo: Autonomous Campus Food Delivery Platform](https://img.youtube.com/vi/3s_SQrm5GHk/0.jpg)](https://www.youtube.com/watch?v=3s_SQrm5GHk "CampusBot Demo: Watch how students order, vendors manage, and robots deliver food autonomously on campus")
 
 
 ---
@@ -89,9 +90,15 @@ Online and on-campus food options are fragmented, slow, and costly to manage whe
 - **SSE Streaming** - Server-Sent Events for real-time telemetry updates
 - **Connection Status** - Live connection indicator for telemetry stream
 
+### ✅ Additional Features
+- **Data Import/Export** - Export data in JSON/CSV formats, import data from JSON (admin only)
+- **Accessibility** - ARIA labels, keyboard navigation, semantic HTML for screen readers
+- **Dependency Documentation** - Automated dependency documentation with licenses (`npm run docs:dependencies`)
+- **License Headers** - Copyright and license headers in source files
+
 ### Quality & Testing
-- ✅ **378 Test Cases** - Comprehensive coverage including nominal and off-nominal scenarios
-- ✅ **20 Test Suites** - All passing with 100% success rate
+- ✅ **419 Test Cases** - Comprehensive coverage including nominal and off-nominal scenarios
+- ✅ **22 Test Suites** - All passing with 100% success rate
 - ✅ **Telemetry Tests** - Full test coverage for new telemetry features
 - ✅ **Automated CI** - GitHub Actions for lint/build/test
 - ✅ **Type Safety** - Full TypeScript implementation
@@ -147,10 +154,24 @@ npm run test:coverage
 
 ---
 
-## 📖 API Documentation
+## 📚 Documentation
 
-- Swagger UI: `http://localhost:3000/api-docs`
-- OpenAPI JSON: `http://localhost:3000/api-docs.json`
+### Getting Started
+- **[Installation Guide](./INSTALL.md)** — Step-by-step setup instructions for local development
+- **[Quick Start Tutorial](#quick-start)** — Get CampusBot running in 5 minutes
+
+### API Documentation
+- **Interactive API Explorer**: `http://localhost:3000/api-docs` (Swagger UI)
+- **OpenAPI Specification**: `http://localhost:3000/api-docs.json` or [docs/openapi.yaml](docs/openapi.yaml)
+- **[Backend Documentation](docs/BACKEND.md)** — Comprehensive backend API guide with examples
+- **[Frontend Documentation](docs/FRONTEND.md)** — Frontend architecture, components, and UI patterns
+
+### Project Information
+- **[Accessibility Guide](./docs/ACCESSIBILITY.md)** — Accessibility standards and testing procedures
+- **[Roadmap](./ROADMAP.md)** — Future features, milestones, and project timeline
+- **[Contributing Guide](./CONTRIBUTING.md)** — How to contribute code, documentation, and tests
+- **[Code of Conduct](./CODE_OF_CONDUCT.md)** — Community guidelines and expectations
+- **[Dependency Documentation](./docs/DEPENDENCIES.md)** — Third-party dependencies with licenses (generate with `npm run docs:dependencies`)
 
 ### Quick API Examples
 
