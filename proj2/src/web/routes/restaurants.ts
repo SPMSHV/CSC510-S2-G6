@@ -46,8 +46,8 @@ const updateMenuItemSchema = Joi.object({
 }).min(1);
 
 // Fallback in-memory storage for non-postgres backends
-const restaurants: Record<string, restaurantQueries.Restaurant> = {};
-const menuItems: Record<string, menuItemQueries.MenuItem> = {};
+export const restaurants: Record<string, restaurantQueries.Restaurant> = {};
+export const menuItems: Record<string, menuItemQueries.MenuItem> = {};
 
 // Get all restaurants
 router.get('/', async (_req: Request, res: Response) => {

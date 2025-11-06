@@ -20,7 +20,7 @@ const updateSchema = Joi.object({
 }).min(1);
 
 // Fallback in-memory storage for non-postgres backends
-const users: Record<string, userQueries.User> = {};
+export const users: Record<string, userQueries.User> = {};
 
 router.get('/', async (_req: Request, res: Response) => {
   try {
