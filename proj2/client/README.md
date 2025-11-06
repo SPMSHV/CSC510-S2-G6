@@ -2,6 +2,8 @@
 
 This is the client application for CampusBot, built with React, TypeScript, and Vite.
 
+For comprehensive frontend documentation, see [docs/FRONTEND.md](../docs/FRONTEND.md).
+
 ## Features
 
 ### Milestone 2: Student Mobile UI

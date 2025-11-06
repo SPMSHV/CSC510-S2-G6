@@ -23,7 +23,8 @@
     "dev:with-seed": "ts-node scripts/dev-with-seed.ts",
     "dev:full": "ts-node scripts/dev-with-seed.ts --frontend",
     "dev:telemetry": "ts-node scripts/telemetry-sim.ts",
-    "db:reset": "npm run migrate:rollback || true && npm run migrate && npm run seed"
+    "db:reset": "npm run migrate:rollback || true && npm run migrate && npm run seed",
+    "docs:dependencies": "ts-node scripts/generate-dependency-docs.ts"
   },
   "engines": {
     "node": ">=18.0.0"

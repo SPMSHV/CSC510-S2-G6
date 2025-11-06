@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2025 CampusBot Contributors
+ * Licensed under the MIT License
+ */
+
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { getUserById } from '../../db/queries/users';

@@ -22,8 +22,9 @@ export default [
       '@typescript-eslint': tseslint,
     },
     rules: {
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_|error' }],
       'no-unused-vars': 'off', // Turn off base rule as it conflicts with @typescript-eslint version
+      'no-undef': 'off', // TypeScript handles this
     },
   },
   {

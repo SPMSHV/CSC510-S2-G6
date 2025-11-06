@@ -28,7 +28,12 @@ export default function SearchBar({ value, onChange }: SearchBarProps) {
         onChange={(e) => onChange(e.target.value)}
         placeholder="Search restaurants..."
         className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none bg-white"
+        aria-label="Search restaurants"
+        aria-describedby="search-description"
       />
+      <span id="search-description" className="sr-only">
+        Search for restaurants by name or description
+      </span>
       {value && (
         <button
           onClick={() => onChange('')}

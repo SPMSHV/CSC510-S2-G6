@@ -7,8 +7,6 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const API_URL = process.env.VITE_API_URL || 'http://localhost:3000/api';
-const BACKEND_URL = API_URL.replace('/api', '');
 const MAX_WAIT_ATTEMPTS = 30;
 const WAIT_DELAY = 1000;
 

@@ -1,4 +1,3 @@
-import { Pool } from 'pg';
 import { getPool } from '../client';
 
 export interface UserRow {

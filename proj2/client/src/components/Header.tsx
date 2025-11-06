@@ -18,8 +18,10 @@ export default function Header() {
           <div className="flex items-center justify-between">
             {/* Left side - Logo */}
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-gray-900">🤖 CampusBot</h1>
-              <span className="hidden sm:block text-sm text-gray-500">Food Delivery</span>
+              <Link to="/" className="flex items-center gap-2" aria-label="CampusBot Home">
+                <h1 className="text-2xl font-bold text-gray-900">🤖 CampusBot</h1>
+                <span className="hidden sm:block text-sm text-gray-500">Food Delivery</span>
+              </Link>
             </div>
 
             {/* Right side - Login/User */}
@@ -30,6 +32,7 @@ export default function Header() {
                     <Link
                       to="/vendor/kiosk"
                       className="hidden sm:block px-4 py-2 text-sm font-medium text-primary-700 hover:text-primary-900 transition-colors"
+                      aria-label="Vendor Kiosk - Manage orders"
                     >
                       Vendor Kiosk
                     </Link>
@@ -37,6 +40,7 @@ export default function Header() {
                     <Link
                       to="/orders"
                       className="hidden sm:block px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                      aria-label="My Orders - View order history"
                     >
                       My Orders
                     </Link>
