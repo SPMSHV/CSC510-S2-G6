@@ -17,7 +17,10 @@
 
 ## 📺 Demo Video
 
-[▶️ Watch 2-Minute Demo](https://youtu.be/demo-placeholder) _(Demo shows complete API functionality, database operations, and test suite execution)_
+<video width="640" height="480" controls>
+  <source src="proj2/video_demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ---
 
