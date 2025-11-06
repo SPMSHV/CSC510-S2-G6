@@ -1,13 +1,13 @@
 # 🤖 CampusBot — Autonomous Campus Food Delivery
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/SPMSHV/CSC510-S2-G6/ci.yml?branch=main&label=Build)](https://github.com/SPMSHV/CSC510-S2-G6/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-419%20passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19143908961)
-[![Coverage](https://img.shields.io/badge/coverage-74%25-green)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19143908961)
+[![Tests](https://img.shields.io/badge/tests-419%20passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19145064891)
+[![Coverage](https://img.shields.io/badge/coverage-74%25-green)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19145064891)
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/SPMSHV/CSC510-S2-G6/blob/main/proj2/LICENSE.md)
 [![Node Version](https://img.shields.io/badge/node-18.x-green)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19143908961)
-[![ESLint](https://img.shields.io/badge/ESLint-passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19143908961)
-[![Prettier](https://img.shields.io/badge/Prettier-formatted-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19143908961)
+[![TypeScript](https://img.shields.io/badge/TypeScript-passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19145064891)
+[![ESLint](https://img.shields.io/badge/ESLint-passing-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19145064891)
+[![Prettier](https://img.shields.io/badge/Prettier-formatted-success)](https://github.com/SPMSHV/CSC510-S2-G6/actions/runs/19145064891)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.17544418-blue)](https://doi.org/10.5281/zenodo.17544418)
 
 
@@ -17,7 +17,9 @@
 
 ## 📺 Demo Video
 
-[▶️ Watch 2-Minute Demo](https://youtu.be/demo-placeholder) _(Demo shows complete API functionality, database operations, and test suite execution)_
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/3s_SQrm5GHk/0.jpg)](https://www.youtube.com/watch?v=3s_SQrm5GHk)
+
 
 ---
 
