@@ -4,8 +4,7 @@ services:
   app:
     build: .
     ports:
-      - \
-3000:3000\
+      - "3000:3000"
     environment:
       - NODE_ENV=production
     depends_on:
@@ -18,5 +17,4 @@ services:
       - POSTGRES_USER=campusbot
       - POSTGRES_PASSWORD=campusbot123
     ports:
-      - \
-5432:5432\
+      - "5432:5432"
