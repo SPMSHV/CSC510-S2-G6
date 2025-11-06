@@ -2,7 +2,9 @@ name: Update Badges
 
 on:
   push:
-    branches: [ main, MAIN ]
+    branches: ['**']  # Run on all branches
+  pull_request:
+    branches: ['**']  # Run on PRs targeting any branch
   workflow_dispatch:
 
 permissions:
@@ -175,6 +177,7 @@ jobs:
         COVERAGE_LINK: ${{ steps.badges.outputs.coverage_link }}
 
     - name: Commit and push changes
+      if: github.event_name == 'push'  # Only commit on push events, not PRs
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
@@ -187,4 +190,13 @@ jobs:
           git commit -m "Update badges: ${{ steps.tests.outputs.test_count }} tests passing, ${{ steps.coverage.outputs.coverage_percent }}% coverage [skip ci]"
           git push
         fi
+    
+    - name: Show badge update (for PRs)
+      if: github.event_name == 'pull_request'
+      run: |
+        echo "## Badge Update Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- **Tests Passing:** ${{ steps.tests.outputs.test_count }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Coverage:** ${{ steps.coverage.outputs.coverage_percent }}%" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "Note: Badge updates are only committed on push events. For PRs, badges will be updated when the PR is merged."
 
