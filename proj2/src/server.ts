@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2025 CampusBot Contributors
+ * Licensed under the MIT License
+ */
+
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';

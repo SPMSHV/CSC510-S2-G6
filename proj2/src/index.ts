@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2025 CampusBot Contributors
+ * Licensed under the MIT License
+ */
+
 import dotenv from 'dotenv';
 import { createServer } from './server';
 import { maybeStartTelemetryFromEnv, telemetryService } from './services/telemetry';
