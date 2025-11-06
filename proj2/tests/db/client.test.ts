@@ -30,7 +30,7 @@ describe('Database Client', () => {
       query: mockQuery,
       end: jest.fn().mockResolvedValue(undefined),
     };
-    (Pool as unknown as jest.Mock).mockImplementation(() => mockPool);
+    jest.mocked(Pool).mockImplementation(() => mockPool as Pool);
   });
 
   afterEach(() => {

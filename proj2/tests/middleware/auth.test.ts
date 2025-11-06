@@ -3,9 +3,12 @@ import { authenticate, verifyToken, generateToken, requireRole, AuthRequest } fr
 import * as userQueries from '../../src/db/queries/users';
 
 // Mock the database query module
-jest.mock('../../src/db/queries/users');
+jest.mock('../../src/db/queries/users', () => ({
+  getUserById: jest.fn(),
+}));
 
-const mockUserQueries = userQueries as jest.Mocked<typeof userQueries>;
+// Access the mocked function
+const mockGetUserById = jest.mocked(userQueries.getUserById);
 
 describe('Authentication Middleware', () => {
   let mockRequest: Partial<AuthRequest>;
@@ -118,10 +121,10 @@ describe('Authentication Middleware', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockUserQueries.getUserById.mockResolvedValue(mockUser);
+      mockGetUserById.mockResolvedValue(mockUser);
 
       await authenticate(mockRequest as AuthRequest, mockResponse as Response, mockNext);
-      expect(mockUserQueries.getUserById).toHaveBeenCalledWith('user-1');
+      expect(mockGetUserById).toHaveBeenCalledWith('user-1');
       expect(mockNext).toHaveBeenCalled();
       expect(mockRequest.user).toBeDefined();
     });
@@ -131,7 +134,7 @@ describe('Authentication Middleware', () => {
       const token = generateToken('user-1', 'test@test.com', 'STUDENT');
       mockRequest.headers = { authorization: `Bearer ${token}` };
 
-      mockUserQueries.getUserById.mockResolvedValue(null);
+      mockGetUserById.mockResolvedValue(null);
 
       await authenticate(mockRequest as AuthRequest, mockResponse as Response, mockNext);
       expect(mockResponse.status).toHaveBeenCalledWith(401);
@@ -144,7 +147,7 @@ describe('Authentication Middleware', () => {
       const token = generateToken('user-1', 'test@test.com', 'STUDENT');
       mockRequest.headers = { authorization: `Bearer ${token}` };
 
-      mockUserQueries.getUserById.mockRejectedValue(new Error('Database connection failed'));
+      mockGetUserById.mockRejectedValue(new Error('Database connection failed'));
 
       await authenticate(mockRequest as AuthRequest, mockResponse as Response, mockNext);
       expect(mockResponse.status).toHaveBeenCalledWith(401);

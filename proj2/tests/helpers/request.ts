@@ -2,6 +2,10 @@ import { createServer } from '../../src/server';
 import jwt from 'jsonwebtoken';
 
 export function createApp() {
+  // Ensure tests run in memory mode by default
+  if (!process.env.DATA_BACKEND) {
+    process.env.DATA_BACKEND = 'memory';
+  }
   return createServer();
 }
 

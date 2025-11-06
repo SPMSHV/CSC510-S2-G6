@@ -7,11 +7,22 @@ import * as robotQueries from '../../src/db/queries/robots';
 import * as orderQueries from '../../src/db/queries/orders';
 
 // Mock the database query modules
-jest.mock('../../src/db/queries/robots');
-jest.mock('../../src/db/queries/orders');
+jest.mock('../../src/db/queries/robots', () => ({
+  getAvailableRobots: jest.fn(),
+  updateRobot: jest.fn(),
+  getRobotById: jest.fn(),
+}));
+jest.mock('../../src/db/queries/orders', () => ({
+  getOrderById: jest.fn(),
+  updateOrder: jest.fn(),
+}));
 
-const mockRobotQueries = robotQueries as jest.Mocked<typeof robotQueries>;
-const mockOrderQueries = orderQueries as jest.Mocked<typeof orderQueries>;
+// Access the mocked functions
+const mockGetAvailableRobots = jest.mocked(robotQueries.getAvailableRobots);
+const mockUpdateRobot = jest.mocked(robotQueries.updateRobot);
+const mockGetRobotById = jest.mocked(robotQueries.getRobotById);
+const mockGetOrderById = jest.mocked(orderQueries.getOrderById);
+const mockUpdateOrder = jest.mocked(orderQueries.updateOrder);
 
 describe('Robot Assignment Service', () => {
   beforeEach(() => {
@@ -20,11 +31,11 @@ describe('Robot Assignment Service', () => {
 
   describe('findNearestAvailableRobot', () => {
     it('returns null when no robots are available', async () => {
-      mockRobotQueries.getAvailableRobots.mockResolvedValue([]);
+      mockGetAvailableRobots.mockResolvedValue([]);
 
       const result = await findNearestAvailableRobot(35.0, -78.0);
       expect(result).toBeNull();
-      expect(mockRobotQueries.getAvailableRobots).toHaveBeenCalledTimes(1);
+      expect(mockGetAvailableRobots).toHaveBeenCalledTimes(1);
     });
 
     it('finds the nearest robot when multiple robots are available', async () => {
@@ -58,12 +69,12 @@ describe('Robot Assignment Service', () => {
         },
       ];
 
-      mockRobotQueries.getAvailableRobots.mockResolvedValue(robots);
+      mockGetAvailableRobots.mockResolvedValue(robots);
 
       const result = await findNearestAvailableRobot(35.0, -78.0);
       expect(result).toBeDefined();
       expect(result?.id).toBe('robot-1'); // Closest robot
-      expect(mockRobotQueries.getAvailableRobots).toHaveBeenCalledTimes(1);
+      expect(mockGetAvailableRobots).toHaveBeenCalledTimes(1);
     });
 
     it('handles single robot available', async () => {
@@ -79,7 +90,7 @@ describe('Robot Assignment Service', () => {
         },
       ];
 
-      mockRobotQueries.getAvailableRobots.mockResolvedValue(robots);
+      mockGetAvailableRobots.mockResolvedValue(robots);
 
       const result = await findNearestAvailableRobot(35.0, -78.0);
       expect(result).toBeDefined();
@@ -108,7 +119,7 @@ describe('Robot Assignment Service', () => {
         },
       ];
 
-      mockRobotQueries.getAvailableRobots.mockResolvedValue(robots);
+      mockGetAvailableRobots.mockResolvedValue(robots);
 
       const result = await findNearestAvailableRobot(35.0, -78.0);
       expect(result?.id).toBe('robot-near'); // Distance matters more than battery
@@ -117,7 +128,7 @@ describe('Robot Assignment Service', () => {
 
   describe('assignRobotToOrder', () => {
     it('successfully assigns robot to order', async () => {
-      mockOrderQueries.updateOrder.mockResolvedValue({
+      mockUpdateOrder.mockResolvedValue({
         id: 'order-1',
         userId: 'user-1',
         vendorId: 'vendor-1',
@@ -132,7 +143,7 @@ describe('Robot Assignment Service', () => {
         updatedAt: new Date().toISOString(),
       });
 
-      mockRobotQueries.updateRobot.mockResolvedValue({
+      mockUpdateRobot.mockResolvedValue({
         id: 'robot-1',
         robotId: 'RB-01',
         status: 'ASSIGNED',
@@ -144,11 +155,11 @@ describe('Robot Assignment Service', () => {
 
       await assignRobotToOrder('order-1', 'robot-1');
 
-      expect(mockOrderQueries.updateOrder).toHaveBeenCalledWith('order-1', {
+      expect(mockUpdateOrder).toHaveBeenCalledWith('order-1', {
         robotId: 'robot-1',
         status: 'ASSIGNED',
       });
-      expect(mockRobotQueries.updateRobot).toHaveBeenCalledWith('robot-1', { status: 'ASSIGNED' });
+      expect(mockUpdateRobot).toHaveBeenCalledWith('robot-1', { status: 'ASSIGNED' });
     });
   });
 
@@ -179,17 +190,17 @@ describe('Robot Assignment Service', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockOrderQueries.getOrderById.mockResolvedValue(order);
-      mockRobotQueries.getAvailableRobots.mockResolvedValue([robot]);
-      mockOrderQueries.updateOrder.mockResolvedValue({ ...order, status: 'ASSIGNED', robotId: 'robot-1' });
-      mockRobotQueries.updateRobot.mockResolvedValue({ ...robot, status: 'ASSIGNED' });
+      mockGetOrderById.mockResolvedValue(order);
+      mockGetAvailableRobots.mockResolvedValue([robot]);
+      mockUpdateOrder.mockResolvedValue({ ...order, status: 'ASSIGNED', robotId: 'robot-1' });
+      mockUpdateRobot.mockResolvedValue({ ...robot, status: 'ASSIGNED' });
 
       await processOrderStatusChange('order-1', 'READY');
 
-      expect(mockOrderQueries.getOrderById).toHaveBeenCalledWith('order-1');
-      expect(mockRobotQueries.getAvailableRobots).toHaveBeenCalled();
-      expect(mockOrderQueries.updateOrder).toHaveBeenCalled();
-      expect(mockRobotQueries.updateRobot).toHaveBeenCalled();
+      expect(mockGetOrderById).toHaveBeenCalledWith('order-1');
+      expect(mockGetAvailableRobots).toHaveBeenCalled();
+      expect(mockUpdateOrder).toHaveBeenCalled();
+      expect(mockUpdateRobot).toHaveBeenCalled();
     });
 
     it('does not assign robot when order is READY but no robots available', async () => {
@@ -208,13 +219,13 @@ describe('Robot Assignment Service', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockOrderQueries.getOrderById.mockResolvedValue(order);
-      mockRobotQueries.getAvailableRobots.mockResolvedValue([]);
+      mockGetOrderById.mockResolvedValue(order);
+      mockGetAvailableRobots.mockResolvedValue([]);
 
       await processOrderStatusChange('order-1', 'READY');
 
-      expect(mockRobotQueries.getAvailableRobots).toHaveBeenCalled();
-      expect(mockOrderQueries.updateOrder).not.toHaveBeenCalled();
+      expect(mockGetAvailableRobots).toHaveBeenCalled();
+      expect(mockUpdateOrder).not.toHaveBeenCalled();
     });
 
     it('does not assign robot when order is READY but missing coordinates', async () => {
@@ -233,11 +244,11 @@ describe('Robot Assignment Service', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockOrderQueries.getOrderById.mockResolvedValue(order);
+      mockGetOrderById.mockResolvedValue(order);
 
       await processOrderStatusChange('order-1', 'READY');
 
-      expect(mockRobotQueries.getAvailableRobots).not.toHaveBeenCalled();
+      expect(mockGetAvailableRobots).not.toHaveBeenCalled();
     });
 
     it('does not assign robot when order is READY but already has robot', async () => {
@@ -256,11 +267,11 @@ describe('Robot Assignment Service', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockOrderQueries.getOrderById.mockResolvedValue(order);
+      mockGetOrderById.mockResolvedValue(order);
 
       await processOrderStatusChange('order-1', 'READY');
 
-      expect(mockRobotQueries.getAvailableRobots).not.toHaveBeenCalled();
+      expect(mockGetAvailableRobots).not.toHaveBeenCalled();
     });
 
     it('updates robot to EN_ROUTE when order becomes EN_ROUTE', async () => {
@@ -289,12 +300,12 @@ describe('Robot Assignment Service', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockOrderQueries.getOrderById.mockResolvedValue(order);
-      mockRobotQueries.updateRobot.mockResolvedValue({ ...robot, status: 'EN_ROUTE' });
+      mockGetOrderById.mockResolvedValue(order);
+      mockUpdateRobot.mockResolvedValue({ ...robot, status: 'EN_ROUTE' });
 
       await processOrderStatusChange('order-1', 'EN_ROUTE');
 
-      expect(mockRobotQueries.updateRobot).toHaveBeenCalledWith('robot-1', { status: 'EN_ROUTE' });
+      expect(mockUpdateRobot).toHaveBeenCalledWith('robot-1', { status: 'EN_ROUTE' });
     });
 
     it('frees robot when order is DELIVERED', async () => {
@@ -323,16 +334,16 @@ describe('Robot Assignment Service', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockOrderQueries.getOrderById.mockResolvedValue(order);
+      mockGetOrderById.mockResolvedValue(order);
       const updatedRobot = { ...robot, status: 'IDLE' as const };
-      mockRobotQueries.updateRobot.mockResolvedValue(updatedRobot);
+      mockUpdateRobot.mockResolvedValue(updatedRobot);
 
       await processOrderStatusChange('order-1', 'DELIVERED');
 
       // Function calls updateRobot twice: once for status, once for location
-      expect(mockRobotQueries.updateRobot).toHaveBeenCalledTimes(2);
-      expect(mockRobotQueries.updateRobot).toHaveBeenCalledWith('robot-1', { status: 'IDLE' });
-      expect(mockRobotQueries.updateRobot).toHaveBeenCalledWith('robot-1', {
+      expect(mockUpdateRobot).toHaveBeenCalledTimes(2);
+      expect(mockUpdateRobot).toHaveBeenCalledWith('robot-1', { status: 'IDLE' });
+      expect(mockUpdateRobot).toHaveBeenCalledWith('robot-1', {
         location: { lat: 35.5, lng: -78.5 },
       });
     });
@@ -353,11 +364,11 @@ describe('Robot Assignment Service', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockOrderQueries.getOrderById.mockResolvedValue(order);
+      mockGetOrderById.mockResolvedValue(order);
 
       await processOrderStatusChange('order-1', 'DELIVERED');
 
-      expect(mockRobotQueries.updateRobot).toHaveBeenCalledWith('robot-1', { status: 'IDLE' });
+      expect(mockUpdateRobot).toHaveBeenCalledWith('robot-1', { status: 'IDLE' });
     });
 
     it('frees robot when order is CANCELLED', async () => {
@@ -376,8 +387,8 @@ describe('Robot Assignment Service', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockOrderQueries.getOrderById.mockResolvedValue(order);
-      mockRobotQueries.updateRobot.mockResolvedValue({
+      mockGetOrderById.mockResolvedValue(order);
+      mockUpdateRobot.mockResolvedValue({
         id: 'robot-1',
         robotId: 'RB-01',
         status: 'IDLE',
@@ -386,16 +397,16 @@ describe('Robot Assignment Service', () => {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
-      mockOrderQueries.updateOrder.mockResolvedValue({ ...order, robotId: null });
+      mockUpdateOrder.mockResolvedValue({ ...order, robotId: null });
 
       await processOrderStatusChange('order-1', 'CANCELLED');
 
-      expect(mockRobotQueries.updateRobot).toHaveBeenCalledWith('robot-1', { status: 'IDLE' });
-      expect(mockOrderQueries.updateOrder).toHaveBeenCalledWith('order-1', { robotId: null });
+      expect(mockUpdateRobot).toHaveBeenCalledWith('robot-1', { status: 'IDLE' });
+      expect(mockUpdateOrder).toHaveBeenCalledWith('order-1', { robotId: null });
     });
 
     it('throws error when order not found', async () => {
-      mockOrderQueries.getOrderById.mockResolvedValue(null);
+      mockGetOrderById.mockResolvedValue(null);
 
       await expect(processOrderStatusChange('nonexistent', 'READY')).rejects.toThrow('Order not found');
     });
@@ -416,13 +427,13 @@ describe('Robot Assignment Service', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      mockOrderQueries.getOrderById.mockResolvedValue(order);
+      mockGetOrderById.mockResolvedValue(order);
 
       await processOrderStatusChange('order-1', 'PREPARING');
 
-      expect(mockRobotQueries.getAvailableRobots).not.toHaveBeenCalled();
-      expect(mockRobotQueries.updateRobot).not.toHaveBeenCalled();
-      expect(mockOrderQueries.updateOrder).not.toHaveBeenCalled();
+      expect(mockGetAvailableRobots).not.toHaveBeenCalled();
+      expect(mockUpdateRobot).not.toHaveBeenCalled();
+      expect(mockUpdateOrder).not.toHaveBeenCalled();
     });
   });
 });
