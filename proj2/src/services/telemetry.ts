@@ -35,7 +35,7 @@ class TelemetryService extends EventEmitter {
         id: `sim-${idx + 1}`,
         robotId,
         status: 'IDLE' as const,
-        batteryPercent: 60 + Math.floor(Math.random() * 40),
+        batteryPercent: 1 + Math.floor(Math.random() * 99),
         location,
         speed: 0,
         distanceTraveled: 0,

@@ -61,7 +61,9 @@ export default function FleetDashboardPage() {
 
     const connect = () => {
       setError(null);
-      es = new EventSource('/api/telemetry/stream');
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      const streamUrl = `${API_BASE_URL}/telemetry/stream`;
+      es = new EventSource(streamUrl);
       
       es.onopen = () => {
         setConnected(true);
@@ -79,8 +81,14 @@ export default function FleetDashboardPage() {
         }
       });
 
-      es.onerror = () => {
+      es.onerror = (err) => {
         setConnected(false);
+        const errorMessage = es?.readyState === EventSource.CONNECTING 
+          ? 'Connecting to telemetry stream...' 
+          : es?.readyState === EventSource.CLOSED
+          ? 'Connection closed. Retrying...'
+          : 'Failed to connect to telemetry stream. Make sure the backend server is running.';
+        setError(errorMessage);
         es?.close();
         reconnectTimeout = setTimeout(() => {
           connect();
@@ -97,12 +105,13 @@ export default function FleetDashboardPage() {
 
   const stopRobot = async (id: string) => {
     try {
-      const response = await fetch(`/api/telemetry/robots/${id}/stop`, { method: 'POST' });
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      const response = await fetch(`${API_BASE_URL}/telemetry/robots/${id}/stop`, { method: 'POST' });
       if (!response.ok) {
         setError(`Failed to stop robot: ${response.statusText}`);
       }
     } catch (err) {
-      setError('Failed to send stop command');
+      setError(`Failed to send stop command: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
   };
 
